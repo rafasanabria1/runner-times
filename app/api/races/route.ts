@@ -3,7 +3,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function GET (req: NextRequest) {
 
-  const {link} = await req.json()
+  const {searchParams} = new URL (req.url)
+  const link = searchParams.get ('link')
+  
   let races
   if (link) {
     races = await prisma.race.findUnique({

@@ -30,12 +30,24 @@ export async function POST (req: NextRequest) {
     const newTimes = times.map (time => {
       return {...time, raceId}
     })
-    
+
     const insertedTimes = await prisma.time.createMany ({
       data: newTimes
     })
 
-    return NextResponse.json(insertedTimes)
+    const race = await prisma.race.update({
+      where: {
+        id: raceId
+      },
+      data: {
+        hasTimes: true
+      },
+      include: {
+        times: false
+      }
+    })
+
+    return NextResponse.json({race, insertedTimes})
 
   } catch (error) {
     return NextResponse.json(
