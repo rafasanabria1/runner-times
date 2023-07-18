@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Race {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  link String @unique
+  date DateTime?
+  city String?
+  distance Int?
+  createAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  hasTimes Boolean @default(false)
+
+  times Time[]
+}
+
+model Time {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  raceId String @db.ObjectId
+  name String
+  surname String?
+  sex String?
+  category String?
+  club String?
+  generalClasif Int?
+  categoryClasif Int?
+  sexClasif Int?
+  totalTime String?
+  diffTimeToFirst String?
+  diffMettersToFirst String?
+  mKm String?
+  createdAt DateTime @default(now())
+
+  race Race @relation(fields: [raceId], references: [id], onDelete: Cascade)
+}
