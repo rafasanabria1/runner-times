@@ -1,9 +1,9 @@
 import prisma from "@/libs/prismadb"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function GET (req: NextRequest) {
+export async function GET (req: NextRequest,  { params }: { params: { raceId: string } }) {
   
-  const { raceId } = await req.json()
+  const raceId = params.raceId ?? ''
 
   if (!raceId || typeof raceId !== 'string') {
     return NextResponse.json(
@@ -28,6 +28,8 @@ export async function GET (req: NextRequest) {
       }
     }
   })
+
+  console.log ({race})
   
   return NextResponse.json(race)
 } 
