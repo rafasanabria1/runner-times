@@ -1,13 +1,16 @@
 export interface Race {
+  id: string
   name: string
   link: string
   date: DateTime
   city: string
   distance: number
   hasTimes: Boolean
+  times: Time[]
 }
 
 export interface Time {
+  id: string
   raceId: string
   name: string
   surname: string,
