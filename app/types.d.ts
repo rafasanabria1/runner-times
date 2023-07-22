@@ -3,6 +3,7 @@ export interface Race {
   name: string
   link: string
   date: DateTime
+  dateFormatted: string
   city: string
   distance: number
   hasTimes: Boolean
