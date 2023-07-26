@@ -1,96 +1,121 @@
+
 import prisma from "@/libs/prismadb"
 import { NextRequest, NextResponse } from "next/server"
+import { CustomError, getFullRace } from "../utils"
 
 export async function GET (req: NextRequest) {
 
   const {searchParams} = new URL (req.url)
-  const link = searchParams.get ('link')
+  const linkToFilter = searchParams.get ('link')
   
-  let races
-  if (link) {
-    races = await prisma.race.findUnique({
-      where: {
-        link
-      },
-      include: {
-        times: false
+  try {
+
+    let races
+    if (linkToFilter) {
+      const race = await prisma.race.findUnique({
+        where: {
+          link: linkToFilter
+        },
+        include: {
+          times: false
+        }
+      })
+      if (! race) {
+        throw new CustomError ({message: 'No se ha encontrado la carrera', code: 404})
       }
-    })
-  } else {
-    races = await prisma.race.findMany({
-      include: {
-        times: false
-      },
-      orderBy: {
-        date: 'desc'
-      }
-    })
-  } 
-  
-  return NextResponse.json(races)
+      
+      const {id, name, link, date, city, distance, hasTimes} = race
+      const fullRace = getFullRace({
+        id,
+        name,
+        link,
+        date,
+        city: city ?? '',
+        distance: distance ?? 0,
+        hasTimes
+      })
+
+      return NextResponse.json(fullRace)
+    } else {
+      const races = await prisma.race.findMany({
+        include: {
+          times: false
+        },
+        orderBy: {
+          date: 'desc'
+        }
+      })
+
+      const fullRaces = races.map (race => {
+        const {id, name, link, date, city, distance, hasTimes} = race
+        return getFullRace({
+          id,
+          name,
+          link,
+          date,
+          city: city ?? '',
+          distance: distance ?? 0,
+          hasTimes
+        })
+      })
+
+      return NextResponse.json(fullRaces)
+    }
+
+  } catch (error) {
+    if (error instanceof CustomError) {
+      return NextResponse.json({ error: error.message }, { status: error.code })
+    } else {
+      return NextResponse.json({error}, { status: 500 })
+    }
+  }
 }
 
 export async function POST (req: NextRequest) {
   const { name, date, link, city } = await req.json()
 
-  if (!name) {
-    return NextResponse.json(
-      { 
-        error: 'El nombre de la carrera es obligatorio.' 
-      },
-      {
-        status: 400
-      }
-    )
-  }
-  if (!link) {
-    return NextResponse.json(
-      { 
-        error: 'El link de la carrera es obligatorio.' 
-      },
-      {
-        status: 400
-      }
-    )
-  }
+  try {
 
-  const race = await prisma.race.create({
-    data: {        
-      name,
-      link,
-      date,
-      city
+    if (!name) {
+      throw new CustomError ({message: 'El nombre de la carrera es obligatorio.', code: 400})
     }
-  })
+    if (!link) {
+      throw new CustomError ({message: 'El link de la carrera es obligatorio.', code: 400})
+    }
 
-  return NextResponse.json(race)
+    const race = await prisma.race.create({
+      data: {        
+        name,
+        link,
+        date,
+        city
+      }
+    })
+  
+    return NextResponse.json(race)
+    
+  } catch (error) {
+    if (error instanceof CustomError) {
+      return NextResponse.json({ error: error.message }, { status: error.code })
+    } else {
+      return NextResponse.json({error}, { status: 500 })
+    }
+  }
 }
 
 export async function PUT (req: NextRequest) {
   const { raceId, distance } = await req.json()
 
-  if (!raceId || typeof raceId !== 'string') {
-    return NextResponse.json(
-      { 
-        error: 'El id de la carrera no es válido.'
-      },
-      {
-        status: 400
-      }
-    )
-  }
-  if (!distance) {
-    return NextResponse.json(
-      { 
-        error: 'La distancia de la carrera no es válida.'
-      },
-      {
-        status: 400
-      }
-    )
-  }
-
   try {
+
+    if (!raceId || typeof raceId !== 'string') {
+      throw new CustomError({message: 'El id de la carrera no es válido.', code: 400})
+    }
+
+    if (!distance) {
+      throw new CustomError({message: 'La distancia de la carrera no es válida.', code: 400})
+    }
+
     const race = await prisma.race.update({
       where: {
         id: raceId
@@ -102,15 +127,13 @@ export async function PUT (req: NextRequest) {
         times: false
       }
     })
-    return NextResponse.json(race)  
+
+    return NextResponse.json(race)
   } catch (error) {
-      return NextResponse.json(
-        { 
-          error: 'No se ha encontrado la carrera a actualizar.' 
-        },
-        {
-          status: 404
-        }
-      )
+    if (error instanceof CustomError) {
+      return NextResponse.json({ error: error.message }, { status: error.code })
+    } else {
+      return NextResponse.json({error}, { status: 500 })
+    }
   }
 }

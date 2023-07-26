@@ -1,4 +1,4 @@
-import { Race as RaceType } from '@/app/types'
+import { Race as RaceType } from '@/app/types.d'
 import RaceSummary from '../components/RaceSummary'
 
 async function getRaces() {

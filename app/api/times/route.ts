@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/libs/prismadb"
-import { Time } from "@/app/types"
+import { Time } from "@/app/types.d"
+import { CustomError } from "../utils"
 
 export async function POST (req: NextRequest) {
 
   const { raceId, times }: {raceId: string, times: Time[]} = await req.json()
 
-  if (!raceId || typeof raceId !== 'string') {
-    return NextResponse.json({ 
-      error: 'El id de la carrera no es válido.'
-    }, 
-    {
-      status: 400
-    })
-  }
-  
   try {
-    
-    await prisma.race.findUniqueOrThrow ({
+    if (!raceId || typeof raceId !== 'string') {
+      throw new CustomError ({message: 'El id de la carrera no es válido', code: 400})  
+    }
+
+    const race = await prisma.race.findUnique ({
       where: {
         id: raceId
       },
@@ -27,6 +22,10 @@ export async function POST (req: NextRequest) {
       }
     })
 
+    if (! race) {
+      throw new CustomError ({message: 'No se ha encontrado la carrera', code: 404})
+    }
+
     const newTimes = times.map (time => {
       return {...time, raceId}
     })
@@ -35,7 +34,7 @@ export async function POST (req: NextRequest) {
       data: newTimes
     })
 
-    const race = await prisma.race.update({
+    prisma.race.update({
       where: {
         id: raceId
       },
@@ -50,13 +49,11 @@ export async function POST (req: NextRequest) {
     return NextResponse.json({race, insertedTimes})
 
   } catch (error) {
-    return NextResponse.json(
-      { 
-        error: 'No se ha encontrado la carrera para guardar los tiempos.'
-      },
-      {
-        status: 404
-      }
-    )
+
+    if (error instanceof CustomError) {
+      return NextResponse.json({ error: error.message }, { status: error.code })
+    } else {
+      return NextResponse.json({error}, { status: 500 })
+    }
   }
 }

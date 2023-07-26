@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Race as RaceType } from "@/app/types"
+import { Race as RaceType } from "@/app/types.d"
 
 export default function RaceSummary (props: {race: RaceType, showLink: Boolean}) {
 
@@ -29,7 +29,7 @@ export default function RaceSummary (props: {race: RaceType, showLink: Boolean})
             <strong
               className="rounded border border-indigo-500 bg-indigo-500 px-3 py-1.5 text-[10px] font-medium text-white"
             >
-              {race.dateFormatted}
+              { race.dateFormatted }
             </strong>
 
           </div>

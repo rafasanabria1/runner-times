@@ -1,9 +1,9 @@
-import { Race as RaceType, Time } from '@/app/types'
+import { Race, Time } from '@/app/types.d'
 import SearchIcon from '@/app/components/icons/SearchIcon'
 import RaceSummary from '@/app/components/RaceSummary'
 import ScrollToTop from '@/app/components/ScrollToTop'
 
-async function getRace({raceId}: {raceId: string}): Promise<RaceType> {
+async function getRace({raceId}: {raceId: string}): Promise<Race> {
   
   const res = await fetch(`http://localhost:3000/api/races/${raceId}`)
   if (!res.ok) {
@@ -55,7 +55,7 @@ export default async function Race({params}: {params: {raceId: string}}) {
               </thead>
               <tbody>
                 {
-                  race.times.map ((time: Time) => {
+                  race.times && race.times.map ((time: Time) => {
                     return (
                       <tr className="bg-white border-b hover:bg-gray-50 " key={time.id}>
                         <td className='text-center'>{time.generalClasif}</td>
