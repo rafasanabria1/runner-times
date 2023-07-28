@@ -1,7 +1,7 @@
 import Link from "next/link"
-import { Race as RaceType } from "@/app/types.d"
+import { Race } from "@/app/types.d"
 
-export default function RaceSummary (props: {race: RaceType, showLink: Boolean}) {
+export default function RaceSummary (props: {race: Race | null, showLink: Boolean}) {
 
   const {race, showLink} = props
   if (! race) return null

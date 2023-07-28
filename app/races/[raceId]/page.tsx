@@ -4,7 +4,7 @@ import RaceSummary from '@/app/components/RaceSummary'
 import ScrollToTop from '@/app/components/ScrollToTop'
 import prisma from "@/libs/prismadb"
 
-async function getRace({raceId}: {raceId: string}): Promise<Race> {
+async function getRace({raceId}: {raceId: string}): Promise<Race | null> {
   
   const race = await prisma.race.findUnique({
     where: {
@@ -18,6 +18,8 @@ async function getRace({raceId}: {raceId: string}): Promise<Race> {
       }
     }
   })
+
+  if (! race) return null
 
   const {id, name, link, date, city, distance, hasTimes, times} = race
   let dateFormatted = ''
@@ -104,7 +106,7 @@ export default async function Race({params}: {params: {raceId: string}}) {
               </thead>
               <tbody>
                 {
-                  race.times && race.times.map ((time: Time) => {
+                  race?.times?.map ((time: Time) => {
                     return (
                       <tr className="bg-white border-b hover:bg-gray-50 " key={time.id}>
                         <td className='text-center'>{time.generalClasif}</td>
