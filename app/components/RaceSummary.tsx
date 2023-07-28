@@ -21,7 +21,7 @@ export default function RaceSummary (props: {race: Race | null, showLink: Boolea
             <h3 className="text-lg font-medium sm:text-xl">
               {
                 race.hasTimes && showLink ? 
-                  <Link href={`http://localhost:3000/races/${race.id}`} className="hover:underline">{race.name}</Link>
+                  <Link href={`/races/${race.id}`} className="hover:underline">{race.name}</Link>
                   :
                   race.name
               }
@@ -44,7 +44,7 @@ export default function RaceSummary (props: {race: Race | null, showLink: Boolea
             <p className="mt-2 sm:mt-0">
               {
                   race.hasTimes && showLink ? 
-                    <Link href={`http://localhost:3000/races/${race.id}`} className='underline hover:text-gray-800'>Consultar tiempos</Link> 
+                    <Link href={`/races/${race.id}`} className='underline hover:text-gray-800'>Consultar tiempos</Link> 
                     : 
                     <span className='text-red-400'>Tiempos no disponibles</span>
               }
