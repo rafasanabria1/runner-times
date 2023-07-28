@@ -14,9 +14,10 @@ export interface Time {
   id?: string
   raceId: string
   name: string
-  surname: string,
+  surname: string
+  fullname?: string
   sex: string
-  category: string,
+  category: string
   club: string,
   generalClasif: number
   categoryClasif: number

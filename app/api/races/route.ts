@@ -10,7 +10,6 @@ export async function GET (req: NextRequest) {
   
   try {
 
-    let races
     if (linkToFilter) {
       const race = await prisma.race.findUnique({
         where: {

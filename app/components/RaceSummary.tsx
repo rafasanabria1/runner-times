@@ -6,6 +6,20 @@ export default function RaceSummary (props: {race: Race | null, showLink: Boolea
   const {race, showLink} = props
   if (! race) return null
   
+  const timeInfo = () => {
+
+    if (! showLink) return <></>
+    
+    return (
+      <>
+        <span className="hidden sm:block" aria-hidden="true">&middot;</span>
+        <p className="mt-2 sm:mt-0">
+          {race.hasTimes && showLink ? (<Link href={`/races/${race.id}`} className='underline hover:text-gray-800'>Consultar tiempos</Link>) : (<span className='text-red-400'>Tiempos no disponibles</span>) }
+        </p>
+      </>
+    )
+  }
+
   return (
     <article className="rounded-xl bg-white p-4 ring ring-indigo-50 sm:p-6 lg:p-8">
       <div className="flex items-start sm:gap-8">
@@ -40,15 +54,9 @@ export default function RaceSummary (props: {race: Race | null, showLink: Boolea
 
           <div className="mt-4 text-gray-500 sm:flex sm:items-center sm:gap-2 text-xs font-medium">
             <p>Distancia: {race.distance} metros</p>
-            <span className="hidden sm:block" aria-hidden="true">&middot;</span>
-            <p className="mt-2 sm:mt-0">
-              {
-                  race.hasTimes && showLink ? 
-                    <Link href={`/races/${race.id}`} className='underline hover:text-gray-800'>Consultar tiempos</Link> 
-                    : 
-                    <span className='text-red-400'>Tiempos no disponibles</span>
-              }
-            </p>
+            { 
+              timeInfo() 
+            }
           </div>
         </div>
       </div>
