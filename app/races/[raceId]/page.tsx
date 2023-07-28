@@ -2,15 +2,64 @@ import { Race, Time } from '@/app/types.d'
 import SearchIcon from '@/app/components/icons/SearchIcon'
 import RaceSummary from '@/app/components/RaceSummary'
 import ScrollToTop from '@/app/components/ScrollToTop'
+import prisma from "@/libs/prismadb"
 
 async function getRace({raceId}: {raceId: string}): Promise<Race> {
   
-  const res = await fetch(`http://localhost:3000/api/races/${raceId}`)
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
+  const race = await prisma.race.findUnique({
+    where: {
+      id: raceId
+    },
+    include: {
+      times: {
+        orderBy: {
+          generalClasif: 'asc'
+        }
+      }
+    }
+  })
+
+  const {id, name, link, date, city, distance, hasTimes, times} = race
+  let dateFormatted = ''
+  if (date) {
+    dateFormatted = (new Date(date)).toLocaleDateString('es-ES', { 
+      month: "2-digit",
+      day: "2-digit",
+    })
   }
- 
-  return res.json()
+
+  const fullTimes = times.map (time => {
+    const { id, raceId, name, surname, sex, category, club, generalClasif, categoryClasif, sexClasif, totalTime, diffTimeToFirst, diffMettersToFirst, mKm} = time
+    return {
+      id,
+      raceId,
+      name, 
+      surname: surname ?? '',
+      sex: sex ?? '',
+      category: category ?? '',
+      club: club ?? '',
+      generalClasif: generalClasif ?? 0,
+      categoryClasif: categoryClasif ?? 0,
+      sexClasif: sexClasif ?? 0,
+      totalTime: totalTime ?? '',
+      diffTimeToFirst: diffTimeToFirst ?? '',
+      diffMettersToFirst: diffMettersToFirst ?? '',
+      mKm: mKm ?? ''
+    }
+  })
+  const fullRace = {
+    id,
+    name,
+    link,
+    date,
+    dateFormatted,
+    city: city ?? '',
+    distance: distance ?? 0,
+    hasTimes,
+    times: fullTimes
+  }
+
+  return fullRace
 }
 
 
