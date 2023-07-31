@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import RunIcon from '@/app/components/icons/RunIcon'
 import Link from 'next/link'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -10,6 +12,8 @@ export const metadata: Metadata = {
   title: 'Modern IDEAIN',
   description: 'Página web moderna con datos de carreras obtenidos de IDEA Informática',
 }
+
+config.autoAddCss = false
 
 export default function RootLayout({
   children,

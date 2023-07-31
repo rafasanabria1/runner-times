@@ -1,14 +1,11 @@
-'use client'
 import SearchIcon from '@/app/components/icons/SearchIcon'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export default function FilterBar () {
+export default function FilterBar ({search, setSearch}: {search: string, setSearch: (arg0: string) => void}) {
 
-  const [search, setSearch] = useState('')
-
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSubmitSearch = (e: React.FormEvent) => {
     e.preventDefault ()
-    console.log({search, encoded: encodeURI(search)})
   }
 
   return (
@@ -18,7 +15,7 @@ export default function FilterBar () {
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <SearchIcon />
           </div>
-          <form onSubmit={handleSearch}>
+          <form onSubmit={handleSubmitSearch}>
             <input type="text" id="search" name="search" className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50" placeholder="Busca tu nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
           </form>
       </div>

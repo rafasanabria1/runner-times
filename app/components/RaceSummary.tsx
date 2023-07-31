@@ -1,25 +1,20 @@
 import Link from "next/link"
 import { Race } from "@/app/types.d"
 
-export default function RaceSummary (props: {race: Race | null, showLink: Boolean}) {
+export default function RaceSummary (props: {race: Race, showLink: Boolean}) {
 
   const {race, showLink} = props
   if (! race) return null
-  
-  const timeInfo = () => {
 
-    if (! showLink) return <></>
-    
-    return (
-      <>
-        <span className="hidden sm:block" aria-hidden="true">&middot;</span>
-        <p className="mt-2 sm:mt-0">
-          {race.hasTimes && showLink ? (<Link href={`/races/${race.id}`} className='underline hover:text-gray-800'>Consultar tiempos</Link>) : (<span className='text-red-400'>Tiempos no disponibles</span>) }
-        </p>
-      </>
-    )
+  let dateFormatted = ''
+  if (race.date) {
+    dateFormatted = (new Date(race.date)).toLocaleDateString('es-ES', { 
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
   }
-
+  
   return (
     <article className="rounded-xl bg-white p-4 ring ring-indigo-50 sm:p-6 lg:p-8">
       <div className="flex items-start sm:gap-8">
@@ -43,19 +38,30 @@ export default function RaceSummary (props: {race: Race | null, showLink: Boolea
             <strong
               className="rounded border border-indigo-500 bg-indigo-500 px-3 py-1.5 text-[10px] font-medium text-white"
             >
-              { race.dateFormatted }
+              { dateFormatted }
             </strong>
 
           </div>
 
           <p className="mt-1 text-sm text-gray-700">
-            {race.city}
+            { race.city }
           </p>
 
           <div className="mt-4 text-gray-500 sm:flex sm:items-center sm:gap-2 text-xs font-medium">
-            <p>Distancia: {race.distance} metros</p>
+            <p>Distancia: { race.distance } metros</p>
             { 
-              timeInfo() 
+              showLink && (
+                <>
+                  <span className="hidden sm:block" aria-hidden="true">&middot;</span>
+                  <p className="mt-2 sm:mt-0">
+                    {
+                      race.hasTimes && showLink ? 
+                        (<Link href={`/races/${race.id}`} className='underline hover:text-gray-800'>Consultar tiempos</Link>) : 
+                        (<span className='text-red-400'>Tiempos no disponibles</span>) 
+                    }
+                  </p>
+                </>
+              )
             }
           </div>
         </div>
