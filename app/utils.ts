@@ -11,6 +11,5 @@ export class CustomError extends Error {
 
 export function getFullURL (url: string): string {
 
-  const protocol = process.env.VERCEL_ENV === 'production' ? 'https' : 'http'
-  return `${protocol}://${process.env.NEXT_PUBLIC_VERCEL_URL}${url}`
+  return `${process.env.SITE_URL}${url}`
 }
