@@ -1,9 +1,3 @@
-export function getFullURL (url: string): string {
-
-  const protocol = process.env.VERCEL_ENV === 'production' ? 'https' : 'http'
-  return `${protocol}://${process.env.NEXT_PUBLIC_VERCEL_URL}${url}`
-}
-
 export class CustomError extends Error {
   
   code = 0
@@ -13,4 +7,10 @@ export class CustomError extends Error {
     this.message = message
     this.code = code
   }
+}
+
+export function getFullURL (url: string): string {
+
+  const protocol = process.env.VERCEL_ENV === 'production' ? 'https' : 'http'
+  return `${protocol}://${process.env.NEXT_PUBLIC_VERCEL_URL}${url}`
 }

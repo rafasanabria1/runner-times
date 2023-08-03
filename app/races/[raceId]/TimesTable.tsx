@@ -3,62 +3,88 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Time } from "../../types"
 import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { useMemo, useState } from "react"
-import useDebounce from "@/app/hooks/useDebounce"
+import useDebounce from "@/app/useDebounce"
 
 export default function TimesTable ({times}: {times: Time[] }) {
 
   const [search, setSearch] = useState ('')
   const [category, setCategory] = useState ('')
+  const [club, setClub] = useState ('')
   const debouncedSearch = useDebounce (search, 300).toUpperCase()
 
-  const categories = useMemo (() => {
+  const {categories, clubs} = useMemo (() => {
     
     const categoriesMap = new Map<Time["category"], number> ();
+    const clubsMap = new Map<Time["club"], number> ();
     times.map (time => {
       if (categoriesMap.has (time.category)) categoriesMap.set (time.category, categoriesMap.get (time.category)! + 1)
       else categoriesMap.set (time.category, 1)
+
+      if (! time.club) return
+      
+      if (clubsMap.has (time.club)) clubsMap.set (time.club, clubsMap.get (time.club)! + 1)
+      else clubsMap.set (time.club, 1)
     })
 
-    return Array.from(categoriesMap.entries()).map(([category, count]) => ({category, count}));
+    return {
+      categories: Array.from(categoriesMap.entries()).map(([category, count]) => ({category, count})).sort ((a, b) => (a.category > b.category) ? 1 : -1),
+      clubs: Array.from(clubsMap.entries()).map(([club, count]) => ({club, count})).sort ((a, b) => (a.club > b.club) ? 1 : -1)
+    }
   }, [times])
 
   const timesToShow = useMemo (() => {
 
-    if (! debouncedSearch && !category) return times
+    if (! debouncedSearch && !category && !club) return times
     return times.filter (time => {
       
       let show = true
-      if (debouncedSearch) show = show && (time.name.indexOf (debouncedSearch) > -1) || (time.surname.indexOf (debouncedSearch) > -1) || (time.club?.indexOf (debouncedSearch) > -1)
+      if (debouncedSearch) show = show && (time.name.indexOf (debouncedSearch) > -1) || (time.surname.indexOf (debouncedSearch) > -1)
       if (category) show = show && (time.category === category)
+      if (club) show = show && (time.club === club)
       return show
     })
-  }, [times, debouncedSearch, category])
+  }, [times, debouncedSearch, category, club])
 
   return (
     <section>
       <div className='filters-container'>
         <div className="py-4 flex justify-between">
-          <div>
-            <label htmlFor="categories" className="sr-only">Selecciona una categoría</label>
-              <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={category} onChange={e => setCategory(e.target.value)}>
-                <option value="">Todas las categorías</option>
-                {
-                  categories.map (({category, count}) => {
-                    return (
-                      <option value={category} key={category}>{category} ({count})</option>
-                    )
-                  })
-                }
-            </select>
+          <div className="flex gap-5">
+            <div>
+              <label htmlFor="categories" className="sr-only">Selecciona una categoría</label>
+                <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={category} onChange={e => setCategory(e.target.value)}>
+                  <option value="">Todas las categorías</option>
+                  {
+                    categories.map (({category, count}) => {
+                      return (
+                        <option value={category} key={category}>{category} ({count})</option>
+                        )
+                      })
+                    }
+              </select>
+            </div>
+            <div>
+              <label htmlFor="clubs" className="sr-only">Selecciona un club</label>
+                <select id="clubs" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={club} onChange={e => setClub(e.target.value)}>
+                  <option value="">Todos los clubs</option>
+                  {
+                    clubs.map (({club, count}) => {
+                      return (
+                        <option value={club} key={club}>{club} ({count})</option>
+                        )
+                      })
+                    }
+              </select>
+            </div>
           </div>
           <div>
-            <label htmlFor="search" className="sr-only">Busca tu nombre o tu club</label>
+            <label htmlFor="search" className="sr-only">Busca tu nombre</label>
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <FontAwesomeIcon icon={faSearch} />
                 </div>
                 <form onSubmit={(e) => e.preventDefault()}>
-                  <input type="text" id="search" name="search" className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50" placeholder="Busca tu nombre o tu club" value={search} onChange={(e) => setSearch(e.target.value)} />
+                  <input type="text" id="search" name="search" className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50" placeholder="Busca tu nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </form>
                 <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => setSearch('')}>
                   <FontAwesomeIcon icon={faClose} />

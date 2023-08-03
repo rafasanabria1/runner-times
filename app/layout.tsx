@@ -1,7 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import RunIcon from '@/app/components/icons/RunIcon'
 import Link from 'next/link'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
@@ -24,22 +23,21 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} min-h-screen flex flex-col `}>
         <header className='mx-auto w-full'>
-          <div className='flex items-center justify-between px-8'>
-            <div className="flex gap-2 items-center justify-start">
-              <RunIcon className="w-24 h-24"/> 
-              <span>Modern IDEAIN</span>
+          <div className='flex items-center justify-between p-8'>
+            <div className="">
+              <span>Modern IDEA - Informática</span>
             </div>
-              <nav>
-                <ul className='flex gap-4'>
-                  <li>
-                    <Link href="/races">Home</Link>
-                  </li>
-                  <li>
-                    <Link href="/about">About</Link>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+            <nav>
+              <ul className='flex gap-4'>
+                <li>
+                  <Link href="/races">Home</Link>
+                </li>
+                <li>
+                  <Link href="/about">About</Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </header>
         {children}
         <footer className='flex bg-red-400 place-content-center'>

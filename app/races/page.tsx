@@ -1,9 +1,9 @@
 import { Race } from '@/app/types.d'
-import RaceSummary from '@/app/components/RaceSummary'
+import RaceSummary from '@/app/races/RaceSummary'
 import { Suspense } from 'react'
 import { getFullURL } from '../utils'
 import Link from 'next/link'
-import Loading from './loading'
+import Loading from '../loading'
 
 const getRaces = async (): Promise<Race[]> => {
   

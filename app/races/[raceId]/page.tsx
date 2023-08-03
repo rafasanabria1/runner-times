@@ -1,10 +1,10 @@
-import ScrollToTop from '@/app/components/ScrollToTop'
-import RaceSummary from '@/app/components/RaceSummary'
+import RaceSummary from '@/app/races/RaceSummary'
 import TimesTable from '@/app/races/[raceId]/TimesTable'
 import { Race } from '@/app/types'
 import { getFullURL } from '@/app/utils'
-import Loading from '@/app/races/loading'
+import Loading from '@/app/loading'
 import { Suspense } from 'react'
+import ScrollToTop from './ScrollToTop'
 
 const getRace = async ({raceId}: {raceId: string}): Promise<Race> => {
   
