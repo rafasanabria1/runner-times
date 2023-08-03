@@ -1,7 +1,7 @@
 
 import prisma from "@/libs/prismadb"
 import { NextRequest, NextResponse } from "next/server"
-import { CustomError, getFullRace } from "../utils"
+import { CustomError } from "../../utils"
 
 export async function GET (req: NextRequest) {
 
@@ -24,7 +24,8 @@ export async function GET (req: NextRequest) {
       }
       
       const {id, name, link, date, city, distance, hasTimes} = race
-      const fullRace = getFullRace({
+      
+      return NextResponse.json({
         id,
         name,
         link,
@@ -33,8 +34,6 @@ export async function GET (req: NextRequest) {
         distance: distance ?? 0,
         hasTimes
       })
-
-      return NextResponse.json(fullRace)
     } else {
       const races = await prisma.race.findMany({
         include: {
@@ -47,7 +46,7 @@ export async function GET (req: NextRequest) {
 
       const fullRaces = races.map (race => {
         const {id, name, link, date, city, distance, hasTimes} = race
-        return getFullRace({
+        return {
           id,
           name,
           link,
@@ -55,7 +54,7 @@ export async function GET (req: NextRequest) {
           city: city ?? '',
           distance: distance ?? 0,
           hasTimes
-        })
+        }
       })
 
       return NextResponse.json(fullRaces)

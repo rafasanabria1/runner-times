@@ -1,6 +1,6 @@
 import prisma from "@/libs/prismadb"
 import { NextRequest, NextResponse } from "next/server"
-import { CustomError, getFullRace } from "../../utils"
+import { CustomError } from "../../../utils"
 
 export async function GET (req: NextRequest,  { params }: { params: { raceId: string } }) {
   
@@ -49,7 +49,7 @@ export async function GET (req: NextRequest,  { params }: { params: { raceId: st
         mKm: mKm ?? ''
       }
     })
-    const fullRace = getFullRace ({
+    const fullRace = {
       id,
       name,
       link,
@@ -58,9 +58,9 @@ export async function GET (req: NextRequest,  { params }: { params: { raceId: st
       distance: distance ?? 0,
       hasTimes,
       times: fullTimes
-    })
+    }
 
-    return NextResponse.json(getFullRace (fullRace))
+    return NextResponse.json(fullRace)
   } catch (error) {
     if (error instanceof CustomError) {
       return NextResponse.json({ error: error.message }, { status: error.code })
