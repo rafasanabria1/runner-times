@@ -1,13 +1,12 @@
 import { Race } from '@/app/types.d'
 import RaceSummary from '@/app/races/RaceSummary'
 import { Suspense } from 'react'
-import { getFullURL } from '../utils'
 import Link from 'next/link'
 import Loading from '../loading'
 
 const getRaces = async (): Promise<Race[]> => {
   
-  return fetch (getFullURL ("/api/races")).then (res => res.json())
+  return fetch ("/api/races").then (res => res.json())
 }
 
 
@@ -24,7 +23,7 @@ export default async function Races() {
                 races!.map ((race: Race) => {
                   if (race.hasTimes) {
                     return (
-                      <Link href={getFullURL(`/races/${race.id}`)} key={race.id}>
+                      <Link href={`/races/${race.id}`} key={race.id}>
                         <RaceSummary race={race} />
                       </Link>
                     )
