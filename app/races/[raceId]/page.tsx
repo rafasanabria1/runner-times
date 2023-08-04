@@ -18,17 +18,15 @@ export default async function Race({params}: {params: {raceId: string}}) {
 
   return (
     <Suspense fallback={<Loading />}>
-      <main className="place-content-center min-h-full h-full flex-grow">
+      <div>
         <ScrollToTop />
-        <section className='max-w-4xl mx-auto px-4 py-5'>
-          <RaceSummary race={race} />
+        <section className='max-w-4xl mx-auto'>
+          <RaceSummary race={race} hover={false} />
         </section>
-        <section className='relative overflow-x-auto'>
-          <div className="px-4 ">
-            <TimesTable times={race.times!}/>
-          </div>
+        <section className='px-8'>
+          <TimesTable times={race.times!}/>
         </section>
-      </main>
+      </div>
     </Suspense>
   )
 }

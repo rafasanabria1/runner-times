@@ -1,6 +1,6 @@
 import { Race } from "@/app/types.d"
 
-export default function RaceSummary ({race}: {race: Race}) {
+export default function RaceSummary ({race, hover}: {race: Race, hover: boolean}) {
 
   if (! race) return null
 
@@ -14,37 +14,23 @@ export default function RaceSummary ({race}: {race: Race}) {
   }
   
   return (
-    <article className={`rounded-xl bg-white p-4 ring ring-indigo-50 sm:p-6 lg:p-8 ${race.hasTimes ? 'hover:ring-indigo-300' : ''}`}>
+    <article className={`rounded-xl p-8 ring ${ hover ? 'ring-light' : 'ring-darker' } ${ (hover && race.hasTimes) ? 'hover:ring-darker' : ''}`}>
       <div className="flex items-start sm:gap-8">
-        <div
-          className="hidden sm:grid sm:h-20 sm:w-20 sm:shrink-0 sm:place-content-center sm:rounded-full sm:border-2 sm:border-indigo-500"
-          aria-hidden="true"
-        >
-          Cartel
-        </div>
+        <div className="hidden sm:grid sm:h-40 sm:w-32 sm:shrink-0 sm:place-content-center sm:rounded-lg sm:border-2 sm:border-dark" aria-hidden="true" ></div>
 
         <div className='flex-grow'>
-          <div className='flex  w-full justify-between items-center'>
-            <h3 className="text-lg font-medium sm:text-xl">{race.name}</h3>
-            <strong
-              className="rounded border border-indigo-500 bg-indigo-500 px-3 py-1.5 text-[10px] font-medium text-white"
-            >
-              { dateFormatted }
-            </strong>
-
+          <div className='flex w-full justify-between items-center'>
+            <h3 className="text-3xl">{race.name}</h3>
+            <strong className="rounded bg-dark px-3 py-1.5 text-[10px] text-white">{ dateFormatted }</strong>
           </div>
-
-          <p className="mt-1 text-sm text-gray-700">
-            { race.city }
-          </p>
-
-          <div className="mt-4 text-gray-500 sm:flex sm:items-center sm:gap-2 text-xs font-medium">
+          <p className="text-lg italic">{ race.city }</p>
+          <div className="mt-2 flex items-center gap-2 text-sm">
             <span>Distancia: { race.distance } metros</span>
             {
               ! race.hasTimes && (
                 <>
                   <span className="block">&middot;</span>
-                  <span className='text-red-400'>Tiempos no disponibles</span> 
+                  <span className='text-darker'>Tiempos no disponibles</span> 
                 </>
               )
             }

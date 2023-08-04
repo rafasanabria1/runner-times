@@ -46,56 +46,54 @@ export default function TimesTable ({times}: {times: Time[] }) {
   }, [times, debouncedSearch, category, club])
 
   return (
-    <section>
-      <div className='filters-container'>
-        <div className="py-4 flex justify-between">
-          <div className="flex gap-5">
-            <div>
-              <label htmlFor="categories" className="sr-only">Selecciona una categoría</label>
-                <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={category} onChange={e => setCategory(e.target.value)}>
-                  <option value="">Todas las categorías</option>
-                  {
-                    categories.map (({category, count}) => {
-                      return (
-                        <option value={category} key={category}>{category} ({count})</option>
-                        )
-                      })
-                    }
-              </select>
-            </div>
-            <div>
-              <label htmlFor="clubs" className="sr-only">Selecciona un club</label>
-                <select id="clubs" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={club} onChange={e => setClub(e.target.value)}>
-                  <option value="">Todos los clubs</option>
-                  {
-                    clubs.map (({club, count}) => {
-                      return (
-                        <option value={club} key={club}>{club} ({count})</option>
-                        )
-                      })
-                    }
-              </select>
-            </div>
+    <>
+      <section className='filters-container py-5 flex justify-between'>
+        <div className="flex gap-5">
+          <div>
+            <label htmlFor="categories" className="sr-only">Selecciona una categoría</label>
+              <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={category} onChange={e => setCategory(e.target.value)}>
+                <option value="">Todas las categorías</option>
+                {
+                  categories.map (({category, count}) => {
+                    return (
+                      <option value={category} key={category}>{category} ({count})</option>
+                      )
+                    })
+                  }
+            </select>
           </div>
           <div>
-            <label htmlFor="search" className="sr-only">Busca tu nombre</label>
-            <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <FontAwesomeIcon icon={faSearch} />
-                </div>
-                <form onSubmit={(e) => e.preventDefault()}>
-                  <input type="text" id="search" name="search" className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50" placeholder="Busca tu nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
-                </form>
-                <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => setSearch('')}>
-                  <FontAwesomeIcon icon={faClose} />
-                </div>
-            </div>
+            <label htmlFor="clubs" className="sr-only">Selecciona un club</label>
+              <select id="clubs" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={club} onChange={e => setClub(e.target.value)}>
+                <option value="">Todos los clubs</option>
+                {
+                  clubs.map (({club, count}) => {
+                    return (
+                      <option value={club} key={club}>{club} ({count})</option>
+                      )
+                    })
+                  }
+            </select>
           </div>
         </div>
-      </div>
-      <div className='times-container'>
-        <table className="w-full text-sm text-left text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+        <div>
+          <label htmlFor="search" className="sr-only">Busca tu nombre</label>
+          <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FontAwesomeIcon icon={faSearch} />
+              </div>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <input type="text" id="search" name="search" className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50" placeholder="Busca tu nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
+              </form>
+              <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => setSearch('')}>
+                <FontAwesomeIcon icon={faClose} />
+              </div>
+          </div>
+        </div>
+      </section>
+      <section className='times-container'>
+        <table className="w-full text-sm text-left ">
+          <thead className="text-xs text-white uppercase bg-light ">
             <tr>
               <th scope="col" className="px-6 py-3 text-center">Clasificación general</th>
               <th scope="col" className="px-6 py-3 text-center">Clasificación categoría</th>
@@ -120,24 +118,27 @@ export default function TimesTable ({times}: {times: Time[] }) {
             {
               timesToShow.map (time => {
                 return (
-                  <tr className="bg-white border-b hover:bg-gray-50 " key={time.id}>
-                    <td className='text-center'>{time.generalClasif}</td>
-                    <td className='text-center'>{time.categoryClasif}</td>
-                    <td className='text-center'>{time.sexClasif}</td>
-                    <td className='text-center'>{time.name} {time.surname}</td>
-                    <td className='text-center'>{time.category}</td>
-                    <td className='text-center'>{time.sex}</td>
-                    <td className='text-center'>{time.totalTime}</td>
-                    <td className='text-center'>{time.mKm}</td>
-                    <td className='text-center'>{time.diffTimeToFirst}</td>
-                    <td className='text-center'>{time.club}</td>
+                    <tr className="bg-white py-2 border-b hover:bg-dark hover:text-white hover:py-4 hover:text-lg ease-in duration-150 " key={time.id}>
+                    <td className='text-center py-0.5'>{time.generalClasif}</td>
+                    <td className='text-center py-0.5'>{time.categoryClasif}</td>
+                    <td className='text-center py-0.5'>{time.sexClasif}</td>
+                    <td className='text-center py-0.5'>{time.name + ' ' + time.surname}</td>
+                    <td className='text-center py-0.5'>{time.category}</td>
+                    <td className='text-center py-0.5'>{time.sex}</td>
+                    <td className='text-center py-0.5'>{time.totalTime}</td>
+                    <td className='text-center py-0.5'>{time.mKm}</td>
+                    <td className='text-center py-0.5'>{time.diffTimeToFirst}</td>
+                    <td className='text-center py-0.5'>{time.club}</td>
                   </tr>
                 )
               })
             }
           </tbody>
         </table>
-      </div>
-    </section>
+        <section className="pt-4 text-lg text-center w-full">
+            Filtrando {timesToShow.length} de {times.length} competidores/as.
+        </section>
+      </section>
+    </>
   )
 }

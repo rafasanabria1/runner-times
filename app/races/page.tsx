@@ -17,27 +17,23 @@ export default async function Races() {
 
   return (
     <Suspense fallback={<Loading />}>
-      <main className="min-h-full h-full flex-grow">
-        <div className='max-w-4xl mx-auto px-4'>
-            <section className="races-container flex flex-col gap-5 py-5">
-              {
-                races!.map ((race: Race) => {
-                  if (race.hasTimes) {
-                    return (
-                      <Link href={getFullURL(`/races/${race.id}`)} key={race.id}>
-                        <RaceSummary race={race} />
-                      </Link>
-                    )
-                  } else {
-                    return (
-                      <RaceSummary race={race} key={race.id} />
-                    )
-                  }
-                })
-              }
-            </section>
-        </div>
-      </main>      
+      <section className='max-w-4xl mx-auto flex flex-col gap-5'>
+        {
+          races!.map ((race: Race) => {
+            if (race.hasTimes) {
+              return (
+                <Link href={getFullURL(`/races/${race.id}`)} key={race.id}>
+                  <RaceSummary race={race} hover={true}/>
+                </Link>
+              )
+            } else {
+              return (
+                <RaceSummary race={race} hover={false} key={race.id} />
+              )
+            }
+          })
+        }
+      </section>      
     </Suspense>
   )
 }

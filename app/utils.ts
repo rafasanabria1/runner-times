@@ -11,5 +11,5 @@ export class CustomError extends Error {
 
 export function getFullURL (url: string): string {
 
-  return `${process.env.SITE_URL}${url}`
+  return `${process.env.BASE_URL}${url}`
 }
