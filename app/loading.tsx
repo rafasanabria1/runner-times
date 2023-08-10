@@ -5,7 +5,7 @@ export default function Loading() {
   
   return (
     <div className='flex-grow grid place-content-center'>
-      <FontAwesomeIcon icon={faSpinner} spin className="w-12 h-12" />
+      <FontAwesomeIcon icon={faSpinner} spin className="w-12 h-12 text-darker" />
     </div>
   )
 }
