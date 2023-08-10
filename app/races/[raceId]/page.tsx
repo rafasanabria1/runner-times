@@ -4,7 +4,7 @@ import { Race } from '@/app/types'
 import { getFullURL } from '@/app/utils'
 import Loading from '@/app/loading'
 import { Suspense } from 'react'
-import ScrollToTop from './ScrollToTop'
+import ScrollToTop from '@/components/ScrollToTop'
 
 const getRace = async ({raceId}: {raceId: string}): Promise<Race> => {
   

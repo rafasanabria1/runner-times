@@ -1,6 +1,6 @@
-import prisma from "@/libs/prismadb"
+import prisma from "@/prisma/prismadb"
 import { NextRequest, NextResponse } from "next/server"
-import { CustomError } from "../../../utils"
+import { CustomError } from "@/app/utils"
 
 export async function GET (req: NextRequest,  { params }: { params: { raceId: string } }) {
   

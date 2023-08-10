@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import prisma from "@/libs/prismadb"
+import prisma from "@/prisma/prismadb"
 import { Time } from "@/app/types.d"
-import { CustomError } from "../../utils"
+import { CustomError } from "@/app/utils"
 
 export async function POST (req: NextRequest) {
 

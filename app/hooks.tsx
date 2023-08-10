@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
-import { Time } from './types'
 import { DOTS } from './const'
 
 export function useDebounce (value: string, delay: number) {
