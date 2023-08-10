@@ -4,7 +4,7 @@ import { Time } from "../../types"
 import { faAngleLeft, faAngleRight, faClose, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { useMemo, useState } from "react"
 import { useDebounce, usePagination } from "@/app/hooks"
-import { DOTS } from "@/app/const"
+import { DOTS, NOCLUB } from "@/app/const"
 
 export default function TimesTable ({times}: {times: Time[] }) {
 
@@ -19,19 +19,24 @@ export default function TimesTable ({times}: {times: Time[] }) {
     
     const categoriesMap = new Map<Time["category"], number> ();
     const clubsMap = new Map<Time["club"], number> ();
+    let countNoClub = 0
     times.map (time => {
       if (categoriesMap.has (time.category)) categoriesMap.set (time.category, categoriesMap.get (time.category)! + 1)
       else categoriesMap.set (time.category, 1)
 
-      if (! time.club) return
+      if (! time.club) return countNoClub++
       
       if (clubsMap.has (time.club)) clubsMap.set (time.club, clubsMap.get (time.club)! + 1)
       else clubsMap.set (time.club, 1)
     })
 
+    const categories = Array.from(categoriesMap.entries()).map(([category, count]) => ({category, count})).sort ((a, b) => (a.category > b.category) ? 1 : -1)
+    const clubs = Array.from(clubsMap.entries()).map(([club, count]) => ({club, count})).sort ((a, b) => (a.club > b.club) ? 1 : -1)
+    clubs.unshift ({club: NOCLUB, count: countNoClub})
+    
     return {
-      categories: Array.from(categoriesMap.entries()).map(([category, count]) => ({category, count})).sort ((a, b) => (a.category > b.category) ? 1 : -1),
-      clubs: Array.from(clubsMap.entries()).map(([club, count]) => ({club, count})).sort ((a, b) => (a.club > b.club) ? 1 : -1)
+      categories,
+      clubs
     }
   }, [times])
 
@@ -43,7 +48,10 @@ export default function TimesTable ({times}: {times: Time[] }) {
       let show = true
       if (debouncedSearch) show = show && (time.name.indexOf (debouncedSearch) > -1) || (time.surname.indexOf (debouncedSearch) > -1)
       if (category) show = show && (time.category === category)
-      if (club) show = show && (time.club === club)
+      if (club) {
+        if (club === NOCLUB) show = show && (!time.club)
+        else show = show && (time.club === club)
+      }
       return show
   })
 }, [times, debouncedSearch, category, club])
@@ -87,6 +95,7 @@ export default function TimesTable ({times}: {times: Time[] }) {
                 <option value="">Filtrar por club</option>
                 {
                   clubs.map (({club, count}) => {
+                    console.log ({club, count})
                     return (
                       <option value={club} key={club}>{club} ({count})</option>
                       )
@@ -161,7 +170,11 @@ export default function TimesTable ({times}: {times: Time[] }) {
           </div>
           <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-gray-700">Mostrando del {firstIndexToShow + 1} al {lastIndexToShow} de {timesFiltered.length} resultados filtrados ({times.length} totales).</p>
+              <p className="text-sm text-gray-700">
+                {
+                  timesFiltered.length <= pageSize ? `Mostrando ${timesFiltered.length} resultados filtrados (${times.length} totales).` : `Mostrando del ${firstIndexToShow + 1} al ${lastIndexToShow} de ${timesFiltered.length} resultados filtrados (${times.length} totales).`
+                }
+              </p>
             </div>
             <div>
               <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
