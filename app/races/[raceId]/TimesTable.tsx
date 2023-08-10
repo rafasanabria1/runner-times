@@ -1,86 +1,81 @@
 'use client'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Time } from "@/app/types"
-import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons"
-import { useEffect, useMemo, useState } from "react"
-import { useDebounce, usePagination } from "@/app/hooks"
-import { NOCLUB } from "@/app/const"
-import Paginator from "@/components/Paginator"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { type Time } from '@/app/types'
+import { faClose, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { useEffect, useMemo, useState } from 'react'
+import { useDebounce, usePagination } from '@/app/hooks'
+import { NOCLUB } from '@/app/const'
+import Paginator from '@/components/Paginator'
 
-export default function TimesTable ({times}: {times: Time[] }) {
-
-  const [search, setSearch] = useState ('')
-  const [category, setCategory] = useState ('')
-  const [club, setClub] = useState ('')
+export default function TimesTable ({ times }: { times: Time[] }) {
+  const [search, setSearch] = useState('')
+  const [category, setCategory] = useState('')
+  const [club, setClub] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState (25)
-  const debouncedSearch = useDebounce (search, 300).toUpperCase()
+  const [pageSize, setPageSize] = useState(25)
+  const debouncedSearch = useDebounce(search, 300).toUpperCase()
 
-  const {categories, clubs} = useMemo (() => {
-    
-    const categoriesMap = new Map<Time["category"], number> ();
-    const clubsMap = new Map<Time["club"], number> ();
+  const { categories, clubs } = useMemo(() => {
+    const categoriesMap = new Map<Time['category'], number>()
+    const clubsMap = new Map<Time['club'], number>()
     let countNoClub = 0
-    times.map (time => {
-      if (categoriesMap.has (time.category)) categoriesMap.set (time.category, categoriesMap.get (time.category)! + 1)
-      else categoriesMap.set (time.category, 1)
+    times.forEach(time => {
+      const categoryCount = categoriesMap.get(time.category) ?? 0
+      categoriesMap.set(time.category, categoryCount + 1)
 
-      if (! time.club) return countNoClub++
-      
-      if (clubsMap.has (time.club)) clubsMap.set (time.club, clubsMap.get (time.club)! + 1)
-      else clubsMap.set (time.club, 1)
+      if (time.club === '') return countNoClub++
+
+      const clubCount = clubsMap.get(time.club) ?? 0
+      clubsMap.set(time.club, clubCount + 1)
     })
 
-    const categories = Array.from(categoriesMap.entries()).map(([category, count]) => ({category, count})).sort ((a, b) => (a.category > b.category) ? 1 : -1)
-    const clubs = Array.from(clubsMap.entries()).map(([club, count]) => ({club, count})).sort ((a, b) => (a.club > b.club) ? 1 : -1)
-    clubs.unshift ({club: NOCLUB, count: countNoClub})
-    
+    const categories = Array.from(categoriesMap.entries()).map(([category, count]) => ({ category, count })).sort((a, b) => (a.category > b.category) ? 1 : -1)
+    const clubs = Array.from(clubsMap.entries()).map(([club, count]) => ({ club, count })).sort((a, b) => (a.club > b.club) ? 1 : -1)
+    clubs.unshift({ club: NOCLUB, count: countNoClub })
+
     return {
       categories,
       clubs
     }
   }, [times])
 
-  const timesFiltered = useMemo (() => {
-    
-    if (! debouncedSearch && !category && !club) return times
-    return times.filter (time => {
-      
+  const timesFiltered = useMemo(() => {
+    if (debouncedSearch === '' && category === '' && club === '') return times
+    return times.filter(time => {
       let show = true
-      if (debouncedSearch) show = show && (time.name.indexOf (debouncedSearch) > -1) || (time.surname.indexOf (debouncedSearch) > -1)
-      if (category) show = show && (time.category === category)
-      if (club) {
-        if (club === NOCLUB) show = show && (!time.club)
+      if (debouncedSearch !== '') show = show && (time.name.includes(debouncedSearch) || time.surname.includes(debouncedSearch))
+      if (category !== '') show = show && (time.category === category)
+      if (club !== '') {
+        if (club === NOCLUB) show = show && (time.club !== '')
         else show = show && (time.club === club)
       }
       return show
-  })
+    })
   }, [times, debouncedSearch, category, club])
 
-  const { paginationRange, firstIndexToShow, lastIndexToShow} = usePagination({currentPage, pageSize, totalCount: timesFiltered.length})
-  
-  const timesToShow = timesFiltered.slice (firstIndexToShow, lastIndexToShow)
+  const { paginationRange, firstIndexToShow, lastIndexToShow } = usePagination({ currentPage, pageSize, totalCount: timesFiltered.length })
+
+  const timesToShow = timesFiltered.slice(firstIndexToShow, lastIndexToShow)
 
   const removeFilters = () => {
-    
-    if (category || club || search) {
-      setCategory ('')
-      setClub ('')
-      setSearch ('')
+    if (category !== '' || club !== '' || search !== '') {
+      setCategory('')
+      setClub('')
+      setSearch('')
     }
   }
 
-  useEffect (() => {
-    setCurrentPage (1)
+  useEffect(() => {
+    setCurrentPage(1)
   }, [category, club, pageSize])
-    
+
   return (
     <>
       <section className='filters-container py-5 flex justify-between'>
         <div className="flex gap-5">
           <div className="flex gap-2 items-center">
             <label htmlFor="results">Mostrando:</label>
-            <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={pageSize} onChange={e => setPageSize(parseInt(e.target.value))}>
+            <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={pageSize} onChange={e => { setPageSize(parseInt(e.target.value)) }}>
               <option value="25">25 participantes</option>
               <option value="50">50 participantes</option>
               <option value="100">100 participantes</option>
@@ -90,27 +85,27 @@ export default function TimesTable ({times}: {times: Time[] }) {
         <div className="flex gap-5">
           <div>
             <label htmlFor="categories" className="sr-only">Selecciona una categoría</label>
-              <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={category} onChange={e => setCategory(e.target.value)}>
+              <select id="categories" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={category} onChange={e => { setCategory(e.target.value) }}>
                 <option value="">Filtrar por categoría</option>
                 {
-                  categories.map (({category, count}) => {
+                  categories.map(({ category, count }) => {
                     return (
                       <option value={category} key={category}>{category} ({count})</option>
-                      )
-                    })
+                    )
+                  })
                   }
             </select>
           </div>
           <div>
             <label htmlFor="clubs" className="sr-only">Selecciona un club</label>
-              <select id="clubs" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={club} onChange={e => setClub(e.target.value)}>
+              <select id="clubs" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-80 " value={club} onChange={e => { setClub(e.target.value) }}>
                 <option value="">Filtrar por club</option>
                 {
-                  clubs.map (({club, count}) => {
+                  clubs.map(({ club, count }) => {
                     return (
                       <option value={club} key={club}>{club} ({count})</option>
-                      )
-                    })
+                    )
+                  })
                   }
             </select>
           </div>
@@ -120,10 +115,10 @@ export default function TimesTable ({times}: {times: Time[] }) {
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <FontAwesomeIcon icon={faSearch} />
                 </div>
-                <form onSubmit={(e) => e.preventDefault()}>
-                  <input type="text" id="search" name="search" className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50" placeholder="Busca tu nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
+                <form onSubmit={(e) => { e.preventDefault() }}>
+                  <input type="text" id="search" name="search" className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50" placeholder="Busca tu nombre" value={search} onChange={(e) => { setSearch(e.target.value) }} />
                 </form>
-                <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => setSearch('')}>
+                <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => { setSearch('') }}>
                   <FontAwesomeIcon icon={faClose} />
                 </div>
             </div>
@@ -160,7 +155,7 @@ export default function TimesTable ({times}: {times: Time[] }) {
               )
             }
             {
-              timesToShow.map (time => {
+              timesToShow.map(time => {
                 return (
                     <tr className="bg-white py-2 border-b hover:bg-dark hover:text-white hover:py-4 hover:text-lg ease-in duration-150 " key={time.id}>
                     <td className='text-center py-0.5'>{time.generalClasif}</td>
@@ -179,7 +174,7 @@ export default function TimesTable ({times}: {times: Time[] }) {
             }
           </tbody>
         </table>
-        <Paginator 
+        <Paginator
             currentPage={currentPage}
             pageSize={pageSize}
             resultsFilteredCount={timesFiltered.length}
@@ -189,7 +184,7 @@ export default function TimesTable ({times}: {times: Time[] }) {
             lastIndexToShow={lastIndexToShow}
             setCurrentPage={setCurrentPage}
         />
-        
+
       </section>
     </>
   )

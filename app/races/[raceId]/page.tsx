@@ -1,20 +1,18 @@
 import RaceSummary from '@/app/races/RaceSummary'
 import TimesTable from '@/app/races/[raceId]/TimesTable'
-import { Race } from '@/app/types'
+import { type Race as RaceType } from '@/app/types'
 import { getFullURL } from '@/app/utils'
 import Loading from '@/app/loading'
 import { Suspense } from 'react'
 import ScrollToTop from '@/components/ScrollToTop'
 
-const getRace = async ({raceId}: {raceId: string}): Promise<Race> => {
-  
-  return fetch (getFullURL (`/api/races/${raceId}`)).then (res => res.json())
+const getRace = async ({ raceId }: { raceId: string }): Promise<RaceType> => {
+  return await fetch(getFullURL(`/api/races/${raceId}`)).then(async res => await res.json())
 }
 
-export default async function Race({params}: {params: {raceId: string}}) {
-
-  const {raceId} = params
-  const race = await getRace({raceId})
+export default async function Race ({ params }: { params: { raceId: string } }) {
+  const { raceId } = params
+  const race = await getRace({ raceId })
 
   return (
     <Suspense fallback={<Loading />}>
@@ -24,7 +22,12 @@ export default async function Race({params}: {params: {raceId: string}}) {
           <RaceSummary race={race} hover={false} />
         </section>
         <section className='px-8'>
-          <TimesTable times={race.times!}/>
+          {
+            (race.times != null) && (
+              <TimesTable times={race.times}/>
+
+            )
+          }
         </section>
       </div>
     </Suspense>
