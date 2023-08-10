@@ -1,8 +1,7 @@
 export class CustomError extends Error {
-  
   code = 0
 
-  constructor ({message, code}: {message: string, code: number}) {
+  constructor ({ message, code }: { message: string, code: number }) {
     super()
     this.message = message
     this.code = code
@@ -10,6 +9,5 @@ export class CustomError extends Error {
 }
 
 export function getFullURL (url: string): string {
-
-  return `${process.env.BASE_URL}${url}`
+  return `${process.env.BASE_URL ?? ''}${url}`
 }

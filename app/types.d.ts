@@ -5,7 +5,7 @@ export interface Race {
   date: DateTime
   city: string
   distance: number
-  hasTimes: Boolean
+  hasTimes: boolean
   dateFormatted?: string
   times?: Time[]
 }
@@ -18,7 +18,7 @@ export interface Time {
   fullname?: string
   sex: string
   category: string
-  club: string,
+  club: string
   generalClasif: number
   categoryClasif: number
   sexClasif: number

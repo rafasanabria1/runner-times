@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Modern IDEAIN',
-  description: 'Página web moderna con datos de carreras obtenidos de IDEA Informática',
+  description: 'Página web moderna con datos de carreras obtenidos de IDEA Informática'
 }
 
 config.autoAddCss = false
@@ -26,8 +26,8 @@ const links = [
   }
 ]
 
-export default function RootLayout({
-  children,
+export default function RootLayout ({
+  children
 }: {
   children: React.ReactNode
 }) {
@@ -42,14 +42,14 @@ export default function RootLayout({
             <nav>
               <ul className='flex gap-4'>
                 {
-                  links.map (link => {
+                  links.map(link => {
                     return (
                       <li key={link.href}>
                         <Link className='px-10 py-5 rounded-md hover:cursor-pointer hover:bg-light hover:text-darker transition-colors duration-300' href="/races">{link.name}</Link>
                       </li>
                     )
                   })
-                }                
+                }
               </ul>
             </nav>
           </div>
@@ -58,7 +58,7 @@ export default function RootLayout({
           {children}
         </main>
         <footer className='bg-dark text-white py-8 text-center '>
-          Realizado por <a className='hover:underline' href="https://github.com/rafasanabria1/" target='_blank'>@rafasanabria1</a>
+          Realizado por <a className='hover:underline' href="https://github.com/rafasanabria1/" target='_blank' rel="noreferrer">@rafasanabria1</a>
         </footer>
       </body>
     </html>

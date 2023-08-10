@@ -1,15 +1,13 @@
-import prisma from "@/prisma/prismadb"
-import { NextRequest, NextResponse } from "next/server"
-import { CustomError } from "@/app/utils"
+import prisma from '@/prisma/prismadb'
+import { type NextRequest, NextResponse } from 'next/server'
+import { CustomError } from '@/app/utils'
 
-export async function GET (req: NextRequest,  { params }: { params: { raceId: string } }) {
-  
+export async function GET (req: NextRequest, { params }: { params: { raceId: string } }) {
   const raceId = params.raceId ?? ''
 
   try {
-
-    if (!raceId || typeof raceId !== 'string') {
-      throw new CustomError({message: 'El id de la carrera no es válido.', code: 400})        
+    if (raceId === '' || typeof raceId !== 'string') {
+      throw new CustomError({ message: 'El id de la carrera no es válido.', code: 400 })
     }
 
     const race = await prisma.race.findUnique({
@@ -25,17 +23,17 @@ export async function GET (req: NextRequest,  { params }: { params: { raceId: st
       }
     })
 
-    if (! race) {
-      throw new CustomError ({message: 'No se ha encontrado la carrera.', code: 404})
+    if (race == null) {
+      throw new CustomError({ message: 'No se ha encontrado la carrera.', code: 404 })
     }
 
-    const {id, name, link, date, city, distance, hasTimes, times} = race
-    const fullTimes = times.map (time => {
-      const { id, raceId, name, surname, sex, category, club, generalClasif, categoryClasif, sexClasif, totalTime, diffTimeToFirst, diffMettersToFirst, mKm} = time
+    const { id, name, link, date, city, distance, hasTimes, times } = race
+    const fullTimes = times.map(time => {
+      const { id, raceId, name, surname, sex, category, club, generalClasif, categoryClasif, sexClasif, totalTime, diffTimeToFirst, diffMettersToFirst, mKm } = time
       return {
         id,
         raceId,
-        name, 
+        name,
         surname: surname ?? '',
         sex: sex ?? '',
         category: category ?? '',
@@ -65,7 +63,7 @@ export async function GET (req: NextRequest,  { params }: { params: { raceId: st
     if (error instanceof CustomError) {
       return NextResponse.json({ error: error.message }, { status: error.code })
     } else {
-      return NextResponse.json({error}, { status: 500 })
+      return NextResponse.json({ error }, { status: 500 })
     }
   }
-} 
+}

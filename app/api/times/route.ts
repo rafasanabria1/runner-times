@@ -1,18 +1,17 @@
-import { NextRequest, NextResponse } from "next/server"
-import prisma from "@/prisma/prismadb"
-import { Time } from "@/app/types.d"
-import { CustomError } from "@/app/utils"
+import { type NextRequest, NextResponse } from 'next/server'
+import prisma from '@/prisma/prismadb'
+import { type Time } from '@/app/types.d'
+import { CustomError } from '@/app/utils'
 
 export async function POST (req: NextRequest) {
-
-  const { raceId, times }: {raceId: string, times: Time[]} = await req.json()
+  const { raceId, times }: { raceId: string, times: Time[] } = await req.json()
 
   try {
-    if (!raceId || typeof raceId !== 'string') {
-      throw new CustomError ({message: 'El id de la carrera no es válido', code: 400})  
+    if (raceId === '' || typeof raceId !== 'string') {
+      throw new CustomError({ message: 'El id de la carrera no es válido', code: 400 })
     }
 
-    const race = await prisma.race.findUnique ({
+    const race = await prisma.race.findUnique({
       where: {
         id: raceId
       },
@@ -22,19 +21,19 @@ export async function POST (req: NextRequest) {
       }
     })
 
-    if (! race) {
-      throw new CustomError ({message: 'No se ha encontrado la carrera', code: 404})
+    if (race == null) {
+      throw new CustomError({ message: 'No se ha encontrado la carrera', code: 404 })
     }
 
-    const newTimes = times.map (time => {
-      return {...time, raceId}
+    const newTimes = times.map(time => {
+      return { ...time, raceId }
     })
 
-    const insertedTimes = await prisma.time.createMany ({
+    const insertedTimes = await prisma.time.createMany({
       data: newTimes
     })
 
-    prisma.race.update({
+    await prisma.race.update({
       where: {
         id: raceId
       },
@@ -46,14 +45,12 @@ export async function POST (req: NextRequest) {
       }
     })
 
-    return NextResponse.json({race, insertedTimes})
-
+    return NextResponse.json({ race, insertedTimes })
   } catch (error) {
-
     if (error instanceof CustomError) {
       return NextResponse.json({ error: error.message }, { status: error.code })
     } else {
-      return NextResponse.json({error}, { status: 500 })
+      return NextResponse.json({ error }, { status: 500 })
     }
   }
 }
