@@ -1,9 +1,8 @@
 import { type Race } from '@/app/types.d'
-import RaceSummary from '@/app/races/RaceSummary'
 import { Suspense } from 'react'
 import { getFullURL } from '../utils'
-import Link from 'next/link'
 import Loading from '../loading'
+import RaceList from './RaceList'
 
 const getRaces = async (): Promise<Race[]> => {
   return await fetch(getFullURL('/api/races')).then(async res => await res.json())
@@ -14,23 +13,9 @@ export default async function Races () {
 
   return (
     <Suspense fallback={<Loading />}>
-      <section className='max-w-4xl mx-auto flex flex-col gap-5'>
-        {
-          races.map((race: Race) => {
-            if (race.id !== undefined && race.hasTimes) {
-              return (
-                <Link href={getFullURL(`/races/${race.id}`)} key={race.id}>
-                  <RaceSummary race={race} hover={true}/>
-                </Link>
-              )
-            } else {
-              return (
-                <RaceSummary race={race} hover={false} key={race.id} />
-              )
-            }
-          })
-        }
-      </section>
+      <div className='max-w-4xl mx-auto '>
+        <RaceList races={races} />
+      </div>
     </Suspense>
   )
 }
