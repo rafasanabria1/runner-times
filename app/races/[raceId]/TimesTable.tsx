@@ -46,7 +46,7 @@ export default function TimesTable ({ times }: { times: Time[] }) {
       if (debouncedSearch !== '') show = show && (time.name.includes(debouncedSearch) || time.surname.includes(debouncedSearch))
       if (category !== '') show = show && (time.category === category)
       if (club !== '') {
-        if (club === NOCLUB) show = show && (time.club !== '')
+        if (club === NOCLUB) show = show && (time.club === '')
         else show = show && (time.club === club)
       }
       return show
