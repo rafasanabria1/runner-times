@@ -2,8 +2,6 @@ import RaceSummary from '@/app/races/RaceSummary'
 import TimesTable from '@/app/races/[raceId]/TimesTable'
 import { type Race as RaceType } from '@/app/types'
 import { getFullURL } from '@/app/utils'
-import Loading from '@/app/loading'
-import { Suspense } from 'react'
 import ScrollToTop from '@/components/ScrollToTop'
 
 const getRace = async ({ raceId }: { raceId: string }): Promise<RaceType> => {
@@ -15,21 +13,19 @@ export default async function Race ({ params }: { params: { raceId: string } }) 
   const race = await getRace({ raceId })
 
   return (
-    <Suspense fallback={<Loading />}>
-      <div>
-        <ScrollToTop />
-        <section className='max-w-4xl mx-auto'>
-          <RaceSummary race={race} hover={false} />
-        </section>
-        <section className='px-8'>
-          {
-            (race.times != null) && (
-              <TimesTable times={race.times}/>
+    <div>
+      <ScrollToTop />
+      <section className='max-w-4xl mx-auto'>
+        <RaceSummary race={race} />
+      </section>
+      <section className='px-8'>
+        {
+          (race.times != null) && (
+            <TimesTable times={race.times}/>
 
-            )
-          }
-        </section>
-      </div>
-    </Suspense>
+          )
+        }
+      </section>
+    </div>
   )
 }

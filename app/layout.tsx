@@ -1,64 +1,32 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import Link from 'next/link'
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import Menu from '@/components/Menu'
 
 export const metadata: Metadata = {
-  title: 'Modern IDEAIN',
-  description: 'Página web moderna con datos de carreras obtenidos de IDEA Informática'
+  title: 'Runner times',
+  description: 'Consutla los tiempos de tus carreras populares'
 }
 
-config.autoAddCss = false
-
-const links = [
-  {
-    name: 'Home',
-    href: '/races'
-  },
-  {
-    name: 'About',
-    href: '/about'
-  }
-]
-
-export default function RootLayout ({
-  children
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout ({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
-        <header className='bg-dark text-white'>
-          <div id="header-desktop" className='flex items-center justify-between px-8 py-12'>
-            <div className="">
-              <span>Modern IDEA - Informática</span>
+    <html lang="es">
+      <body className=''>
+        <aside className="fixed top-0 left-0 z-40 h-screen w-20 desktop:w-96 ">
+          <div className="h-full p-5 overflow-y-auto flex flex-col justify-between bg-base-200">
+            <div>
+              <h1 className='hidden desktop:block desktop:leading-8 desktop:text-3xl desktop:font-bold desktop:text-white desktop:py-5'>
+                Runner Times!
+              </h1>
+              <Menu className="desktop:mt-10"/>
             </div>
-            <nav>
-              <ul className='flex gap-4'>
-                {
-                  links.map(link => {
-                    return (
-                      <li key={link.href}>
-                        <Link className='px-10 py-5 rounded-md hover:cursor-pointer hover:bg-light hover:text-darker transition-colors duration-300' href="/races">{link.name}</Link>
-                      </li>
-                    )
-                  })
-                }
-              </ul>
-            </nav>
+            <div className='hidden desktop:block text-xl font-bold text-center text-white py-5'>
+              <a href="https://github.com/rafasanabria1/" target='_blank' rel="noreferrer">@rafasanabria1</a>
+            </div>
           </div>
-        </header>
-        <main className="min-h-full h-full flex-grow py-5">
+        </aside>
+        <section className="p-4 ml-20 desktop:ml-96 h-screen overflow-y-auto">
           {children}
-        </main>
-        <footer className='bg-dark text-white py-8 text-center '>
-          Realizado por <a className='hover:underline' href="https://github.com/rafasanabria1/" target='_blank' rel="noreferrer">@rafasanabria1</a>
-        </footer>
+        </section>
       </body>
     </html>
   )

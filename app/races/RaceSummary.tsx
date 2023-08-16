@@ -1,6 +1,11 @@
 import { type Race } from '@/app/types.d'
+import Image from 'next/image'
+import cartelImg from '@/app/images/cartel.jpg'
+import Link from 'next/link'
 
-export default function RaceSummary ({ race, hover }: { race: Race, hover: boolean }) {
+export default function RaceSummary ({ race }: { race: Race }) {
+  if (race.id === undefined) return null
+
   let dateFormatted = ''
   if (race.date !== undefined) {
     dateFormatted = (new Date(race.date)).toLocaleDateString('es-ES', {
@@ -11,17 +16,19 @@ export default function RaceSummary ({ race, hover }: { race: Race, hover: boole
   }
 
   return (
-    <article className={`rounded-xl p-8 ring ${hover ? 'ring-light' : 'ring-darker'} ${(hover && race.hasTimes) ? 'hover:ring-darker' : ''}`}>
-      <div className="flex items-start sm:gap-8">
-        <div className="hidden sm:grid sm:h-40 sm:w-32 sm:shrink-0 sm:place-content-center sm:rounded-lg sm:border-2 sm:border-dark" aria-hidden="true" ></div>
-
-        <div className='flex-grow'>
-          <div className='flex w-full justify-between items-center'>
-            <h3 className="text-3xl">{race.name}</h3>
-            <strong className="rounded bg-dark px-3 py-1.5 text-[10px] text-white">{ dateFormatted }</strong>
-          </div>
-          <p className="text-lg italic">{ race.city }</p>
-          <div className="mt-2 flex items-center gap-2 text-sm">
+    <article className='p-5 rounded-lg bg-base-200'>
+      <div className="flex gap-5 ">
+        <div className="h-40 w-32 rounded-lg border-2 border-dark overflow-hidden" >
+          <Link href={`/races/${race.id}`} >
+            <Image src={cartelImg} alt={race.name} className='object-fill w-full h-full' />
+          </Link>
+        </div>
+        <div className='flex-1 pt-4'>
+          <Link href={`/races/${race.id}`}>
+            <h3 className="text-xl font-bold">{race.name}</h3>
+          </Link>
+          <p className="text-lg italic">{ race.city } - { dateFormatted }</p>
+          <div className="flex items-center gap-2 text-sm">
             <span>Distancia: { race.distance } metros</span>
             {
               !race.hasTimes && (

@@ -1,12 +1,9 @@
 'use client'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { type Race } from '../types'
-import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { useMemo, useState } from 'react'
-import { getFullURL } from '../utils'
-import Link from 'next/link'
 import RaceSummary from './RaceSummary'
 import { useDebounce } from '../hooks'
+import { IconX } from '@tabler/icons-react'
 
 export default function RaceList ({ races }: { races: Race[] }) {
   const [search, setSearch] = useState('')
@@ -26,36 +23,28 @@ export default function RaceList ({ races }: { races: Race[] }) {
           <label htmlFor="search" className="sr-only">Busca por ciudad o nombre de carrera...</label>
           <div className="relative">
               <form onSubmit={(e) => { e.preventDefault() }}>
-                <input type="text" id="search" name="search" className="block py-2 px-10 text-lg text-gray-900 border border-gray-300 rounded-lg bg-gray-50 w-full h-16" placeholder="Busca por ciudad o nombre de carrera..." value={search} onChange={(e) => { setSearch(e.target.value) }} />
+                <input type="text" id="search" name="search" className="block p-2 desktop:px-10 text-lg text-gray-900 border border-gray-300 rounded-lg bg-gray-50 w-full h-16" placeholder="Busca por ciudad o nombre de carrera..." value={search} onChange={(e) => { setSearch(e.target.value) }} />
               </form>
               <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => { setSearch('') }}>
-                <FontAwesomeIcon icon={faClose} />
+                <IconX className='text-base-100'/>
               </div>
           </div>
         </div>
       </section>
-      <section className='flex flex-col gap-5'>
         {
           racesFiltered.length <= 0 && (
-            <span className='text-lg text-center py-10'>No se han encontrado carreras para esa búsqueda.</span>
+            <span className='block text-lg text-center py-10 h-full'>No se han encontrado carreras para esa búsqueda.</span>
           )
         }
         {
-          racesFiltered.map((race: Race) => {
-            if (race.id !== undefined && race.hasTimes) {
-              return (
-                <Link href={getFullURL(`/races/${race.id}`)} key={race.id}>
-                  <RaceSummary race={race} hover={true}/>
-                </Link>
-              )
-            } else {
-              return (
-                <RaceSummary race={race} hover={false} key={race.id} />
-              )
-            }
-          })
+          (racesFiltered.length > 0) && (
+            <section className='grid grid-cols-[repeat(auto-fill,minmax(600px,1fr))] gap-5'>
+              {
+                racesFiltered.map((race: Race) => <RaceSummary race={race} key={race.id} />)
+              }
+            </section>
+          )
         }
-      </section>
     </>
   )
 }
