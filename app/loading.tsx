@@ -1,10 +1,9 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconLoader2 } from '@tabler/icons-react'
 
 export default function Loading () {
   return (
-    <div className='flex-grow grid place-content-center h-screen'>
-      <FontAwesomeIcon icon={faSpinner} spin className="w-12 h-12 text-darker" />
+    <div className='grow grid place-content-center h-screen'>
+      <IconLoader2 className='animate-spin' />
     </div>
   )
 }

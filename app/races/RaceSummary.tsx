@@ -23,7 +23,7 @@ export default function RaceSummary ({ race }: { race: Race }) {
             <Image src={cartelImg} alt={race.name} className='object-fill w-full h-full' />
           </Link>
         </div>
-        <div className='flex-1 w-full'>
+        <div className='grow w-full'>
           <Link href={`/races/${race.id}`}>
             <h3 className="text-xl font-bold text-center desktop:text-left desktop:text-3xl">{race.name}</h3>
           </Link>

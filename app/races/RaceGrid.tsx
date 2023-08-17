@@ -18,12 +18,12 @@ export default function RaceGrid ({ races }: { races: Race[] }) {
 
   return (
     <>
-      <section className='mb-5'>
+      <section>
         <div>
           <label htmlFor="search" className="sr-only">Busca por ciudad o nombre de carrera...</label>
           <div className="relative">
               <form onSubmit={(e) => { e.preventDefault() }}>
-                <input type="text" id="search" name="search" className="block rounded-lg w-full   input input-bordered text-white input-md desktop:input-lg" placeholder="Busca por ciudad o nombre de carrera..." value={search} onChange={(e) => { setSearch(e.target.value) }} />
+                <input type="text" id="search" name="search" className="block rounded-lg w-full input input-bordered text-white input-md desktop:input-lg" placeholder="Busca por ciudad o nombre de carrera..." value={search} onChange={(e) => { setSearch(e.target.value) }} />
               </form>
               <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => { setSearch('') }}>
                 <IconX className='text-white'/>

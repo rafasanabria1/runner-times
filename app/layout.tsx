@@ -27,7 +27,7 @@ export default function RootLayout ({ children }: { children: React.ReactNode })
             </div>
           </div>
         </aside>
-        <section className="p-4 ml-14 desktop:ml-96 h-screen overflow-y-auto">
+        <section className="p-4 ml-14 desktop:ml-96 h-screen flex flex-col gap-5">
           {children}
         </section>
       </body>
