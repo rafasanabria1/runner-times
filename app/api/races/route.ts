@@ -13,14 +13,19 @@ export async function GET (req: NextRequest) {
           link: linkToFilter
         },
         include: {
-          times: false
+          times: false,
+          _count: {
+            select: {
+              times: true
+            }
+          }
         }
       })
       if (race == null) {
         throw new CustomError({ message: 'No se ha encontrado la carrera', code: 404 })
       }
 
-      const { id, name, link, date, city, distance, hasTimes } = race
+      const { id, name, link, date, city, distance, hasTimes, _count } = race
 
       return NextResponse.json({
         id,
@@ -29,12 +34,18 @@ export async function GET (req: NextRequest) {
         date,
         city: city ?? '',
         distance: distance ?? 0,
-        hasTimes
+        hasTimes,
+        timesCount: _count.times
       })
     } else {
       const races = await prisma.race.findMany({
         include: {
-          times: false
+          times: false,
+          _count: {
+            select: {
+              times: true
+            }
+          }
         },
         orderBy: {
           date: 'desc'
@@ -42,7 +53,7 @@ export async function GET (req: NextRequest) {
       })
 
       const fullRaces = races.map(race => {
-        const { id, name, link, date, city, distance, hasTimes } = race
+        const { id, name, link, date, city, distance, hasTimes, _count } = race
         return {
           id,
           name,
@@ -50,7 +61,8 @@ export async function GET (req: NextRequest) {
           date,
           city: city ?? '',
           distance: distance ?? 0,
-          hasTimes
+          hasTimes,
+          timesCount: _count.times
         }
       })
 

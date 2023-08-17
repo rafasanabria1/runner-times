@@ -16,27 +16,24 @@ export default function RaceSummary ({ race }: { race: Race }) {
   }
 
   return (
-    <article className='p-5 rounded-lg bg-base-200'>
-      <div className="flex gap-5 ">
-        <div className="h-40 w-32 rounded-lg border-2 border-dark overflow-hidden" >
+    <article className='p-3 desktop:p-5 rounded-lg bg-base-200'>
+      <div className="flex gap-2 desktop:gap-5 flex-col desktop:flex-row justify-center desktop:items-center">
+        <div className="h-40 w-32 rounded-lg border-2 border-dark mx-auto" >
           <Link href={`/races/${race.id}`} >
             <Image src={cartelImg} alt={race.name} className='object-fill w-full h-full' />
           </Link>
         </div>
-        <div className='flex-1 pt-4'>
+        <div className='flex-1 w-full'>
           <Link href={`/races/${race.id}`}>
-            <h3 className="text-xl font-bold">{race.name}</h3>
+            <h3 className="text-xl font-bold text-center desktop:text-left desktop:text-3xl">{race.name}</h3>
           </Link>
-          <p className="text-lg italic">{ race.city } - { dateFormatted }</p>
-          <div className="flex items-center gap-2 text-sm">
-            <span>Distancia: { race.distance } metros</span>
+          <div className='flex flex-col text-sm items-center mt-2 desktop:items-start desktop:text-lg'>
+            <span>{ race.city } - { dateFormatted }</span>
+            <span>{ race.distance } metros</span>
             {
-              !race.hasTimes && (
-                <>
-                  <span className="block">&middot;</span>
-                  <span className='text-darker'>Tiempos no disponibles</span>
-                </>
-              )
+              race.timesCount > 0
+                ? <span>{ race.timesCount } tiempos registrados</span>
+                : <span>&middot; Tiempos no disponibles</span>
             }
           </div>
         </div>

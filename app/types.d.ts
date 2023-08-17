@@ -8,6 +8,7 @@ export interface Race {
   hasTimes: boolean
   dateFormatted?: string
   times?: Time[]
+  timesCount?: int
 }
 
 export interface Time {

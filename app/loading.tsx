@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function Loading () {
   return (
-    <div className='flex-grow grid place-content-center'>
+    <div className='flex-grow grid place-content-center h-screen'>
       <FontAwesomeIcon icon={faSpinner} spin className="w-12 h-12 text-darker" />
     </div>
   )

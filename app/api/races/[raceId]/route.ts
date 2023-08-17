@@ -55,7 +55,8 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
       city: city ?? '',
       distance: distance ?? 0,
       hasTimes,
-      times: fullTimes
+      times: fullTimes,
+      timesCount: fullTimes.length
     }
 
     return NextResponse.json(fullRace)
