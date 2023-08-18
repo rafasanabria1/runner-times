@@ -1,5 +1,5 @@
 'use client'
-import { type Time } from '@/app/types'
+import { type Time } from '@/lib/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useDebounce, usePagination } from '@/app/hooks'
 import { NOCLUB } from '@/app/const'

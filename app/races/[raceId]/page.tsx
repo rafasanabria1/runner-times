@@ -1,5 +1,5 @@
 import TimesTable from '@/app/races/[raceId]/TimesTable'
-import { type Race as RaceType } from '@/app/types'
+import { type Race as RaceType } from '@/lib/types'
 import { getFullURL } from '@/app/utils'
 
 const getRace = async ({ raceId }: { raceId: string }): Promise<RaceType> => {

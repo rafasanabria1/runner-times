@@ -1,4 +1,4 @@
-import { type Race } from '@/app/types.d'
+import { type Race } from '@/lib/types'
 import Image from 'next/image'
 import cartelImg from '@/app/images/cartel.jpg'
 import Link from 'next/link'

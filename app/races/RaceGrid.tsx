@@ -1,8 +1,8 @@
 'use client'
-import { type Race } from '../types'
+import { type Race } from '@/lib/types'
 import { useMemo, useState } from 'react'
 import RaceSummary from './RaceSummary'
-import { useDebounce } from '../hooks'
+import { useDebounce } from '@/lib/hooks'
 import { IconX } from '@tabler/icons-react'
 
 export default function RaceGrid ({ races }: { races: Race[] }) {

@@ -1,6 +1,6 @@
 import prisma from '@/prisma/prismadb'
 import { type NextRequest, NextResponse } from 'next/server'
-import { CustomError } from '@/app/utils'
+import { CustomError } from '@/lib/utils'
 
 export async function GET (req: NextRequest) {
   const { searchParams } = new URL(req.url)

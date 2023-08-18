@@ -1,20 +1,20 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { IconRun, IconInfoCircle } from '@tabler/icons-react'
+import { IconHome, IconRun } from '@tabler/icons-react'
 
 export default function Menu ({ className }: { className: string }) {
   const pathname = usePathname()
   const menuLinks = [
     {
-      name: 'Carreras',
-      href: '/races',
-      icon: <IconRun />
+      name: 'Home',
+      href: '/',
+      icon: <IconHome />
     },
     {
-      name: 'Sobre el proyecto',
-      href: '/about',
-      icon: <IconInfoCircle />
+      name: 'Todas las carreras',
+      href: '/races',
+      icon: <IconRun />
     }
   ].map(link => {
     return {

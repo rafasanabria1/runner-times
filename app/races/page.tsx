@@ -1,5 +1,5 @@
-import { type Race } from '@/app/types.d'
-import { getFullURL } from '../utils'
+import { type Race } from '@/lib/types'
+import { getFullURL } from '@/lib/utils'
 import RaceGrid from './RaceGrid'
 
 const getRaces = async (): Promise<Race[]> => {

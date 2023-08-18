@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import prisma from '@/prisma/prismadb'
-import { type Time } from '@/app/types.d'
-import { CustomError } from '@/app/utils'
+import { type Time } from '@/lib/types'
+import { CustomError } from '@/lib/utils'
 
 export async function POST (req: NextRequest) {
   const { raceId, times }: { raceId: string, times: Time[] } = await req.json()
