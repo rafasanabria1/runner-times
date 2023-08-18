@@ -4,13 +4,16 @@ import { CustomError } from '@/lib/utils'
 
 export async function GET (req: NextRequest) {
   const { searchParams } = new URL(req.url)
-  const linkToFilter = searchParams.get('link')
+  const query = {
+    link: searchParams.get('link') ?? '',
+    search: searchParams.get('q') ?? ''
+  }
 
   try {
-    if (linkToFilter !== '' && linkToFilter !== null) {
+    if (query.link !== '') {
       const race = await prisma.race.findUnique({
         where: {
-          link: linkToFilter
+          link: query.link
         },
         include: {
           times: false,
@@ -21,11 +24,11 @@ export async function GET (req: NextRequest) {
           }
         }
       })
-      if (race == null) {
+      if (race === null) {
         throw new CustomError({ message: 'No se ha encontrado la carrera', code: 404 })
       }
 
-      const { id, name, link, date, city, distance, hasTimes, _count } = race
+      const { id, name, link, date, city, distance, _count } = race
 
       return NextResponse.json({
         id,
@@ -34,11 +37,24 @@ export async function GET (req: NextRequest) {
         date,
         city: city ?? '',
         distance: distance ?? 0,
-        hasTimes,
         timesCount: _count.times
       })
     } else {
       const races = await prisma.race.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains: query.search,
+                mode: 'insensitive'
+              },
+              city: {
+                contains: query.search,
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
         include: {
           times: false,
           _count: {
@@ -53,7 +69,7 @@ export async function GET (req: NextRequest) {
       })
 
       const fullRaces = races.map(race => {
-        const { id, name, link, date, city, distance, hasTimes, _count } = race
+        const { id, name, link, date, city, distance, _count } = race
         return {
           id,
           name,
@@ -61,7 +77,6 @@ export async function GET (req: NextRequest) {
           date,
           city: city ?? '',
           distance: distance ?? 0,
-          hasTimes,
           timesCount: _count.times
         }
       })

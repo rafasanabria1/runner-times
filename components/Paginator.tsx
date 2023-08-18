@@ -1,4 +1,4 @@
-import { DOTS } from '@/app/const'
+import { DOTS } from '@/lib/const'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 
 interface PaginationProps {

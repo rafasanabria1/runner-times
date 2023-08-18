@@ -27,7 +27,7 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
       throw new CustomError({ message: 'No se ha encontrado la carrera.', code: 404 })
     }
 
-    const { id, name, link, date, city, distance, hasTimes, times } = race
+    const { id, name, link, date, city, distance, times } = race
     const fullTimes = times.map(time => {
       const { id, raceId, name, surname, sex, category, club, generalClasif, categoryClasif, sexClasif, totalTime, diffTimeToFirst, diffMettersToFirst, mKm } = time
       return {
@@ -54,7 +54,6 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
       date,
       city: city ?? '',
       distance: distance ?? 0,
-      hasTimes,
       times: fullTimes,
       timesCount: fullTimes.length
     }

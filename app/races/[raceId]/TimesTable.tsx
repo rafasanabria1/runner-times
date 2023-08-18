@@ -1,8 +1,8 @@
 'use client'
 import { type Time } from '@/lib/types'
 import { useEffect, useMemo, useState } from 'react'
-import { useDebounce, usePagination } from '@/app/hooks'
-import { NOCLUB } from '@/app/const'
+import { useDebounce, usePagination } from '@/lib/hooks'
+import { NOCLUB } from '@/lib/const'
 import Paginator from '@/components/Paginator'
 import { IconX } from '@tabler/icons-react'
 

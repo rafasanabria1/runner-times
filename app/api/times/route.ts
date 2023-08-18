@@ -33,18 +33,6 @@ export async function POST (req: NextRequest) {
       data: newTimes
     })
 
-    await prisma.race.update({
-      where: {
-        id: raceId
-      },
-      data: {
-        hasTimes: true
-      },
-      include: {
-        times: false
-      }
-    })
-
     return NextResponse.json({ race, insertedTimes })
   } catch (error) {
     if (error instanceof CustomError) {

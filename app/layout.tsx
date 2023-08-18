@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import Menu from '@/components/Menu'
+import { IconBrandGithub } from '@tabler/icons-react'
 
 export const metadata: Metadata = {
   title: 'Runner times',
@@ -22,8 +23,11 @@ export default function RootLayout ({ children }: { children: React.ReactNode })
               </h2>
               <Menu className="mt-10"/>
             </div>
-            <div className='text-xl font-bold text-center text-white py-5'>
-              <a href="https://github.com/rafasanabria1/" target='_blank' rel="noreferrer">@<span className='hidden desktop:inline'>rafasanabria1</span></a>
+            <div className=' py-5 font-medium'>
+              <a href="https://github.com/rafasanabria1/" className='flex items-center p-2 rounded-lg group hover:bg-base-100' target='_blank' rel="noreferrer">
+                <IconBrandGithub />
+                <span className="hidden desktop:ml-3 desktop:block">@rafasanabria1</span>
+              </a>
             </div>
           </div>
         </aside>

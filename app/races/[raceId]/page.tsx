@@ -1,6 +1,6 @@
 import TimesTable from '@/app/races/[raceId]/TimesTable'
 import { type Race as RaceType } from '@/lib/types'
-import { getFullURL } from '@/app/utils'
+import { getFullURL } from '@/lib/utils'
 
 const getRace = async ({ raceId }: { raceId: string }): Promise<RaceType> => {
   return await fetch(getFullURL(`/api/races/${raceId}`)).then(async res => await res.json())

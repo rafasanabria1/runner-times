@@ -29,7 +29,7 @@ export default function Menu ({ className }: { className: string }) {
         menuLinks.map(link => {
           return (
             <li key={link.href}>
-                <Link href={link.href} className="flex items-center p-2 rounded-lg group hover:bg-base-100">
+                <Link href={link.href} className={`flex items-center p-2 rounded-lg group hover:bg-base-100 ${link.isActive !== '' ? 'bg-base-100' : ''}`}>
                   <span>{link.icon}</span>
                   <span className="hidden desktop:ml-3 desktop:block">{link.name}</span>
                 </Link>

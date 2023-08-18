@@ -5,7 +5,6 @@ export interface Race {
   date: DateTime
   city: string
   distance: number
-  hasTimes: boolean
   dateFormatted?: string
   times?: Time[]
   timesCount?: int
