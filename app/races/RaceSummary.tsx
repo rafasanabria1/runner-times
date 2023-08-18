@@ -16,7 +16,7 @@ export default function RaceSummary ({ race }: { race: Race }) {
   }
 
   return (
-    <article className='p-3 desktop:p-5 rounded-lg bg-base-200'>
+    <article className='p-3 desktop:p-5 rounded-lg bg-base-200 grid items-center'>
       <div className="flex gap-2 desktop:gap-5 flex-col desktop:flex-row justify-center desktop:items-center">
         <div className="h-40 w-32 rounded-lg border-2 border-dark mx-auto" >
           <Link href={`/races/${race.id}`} >

@@ -10,5 +10,5 @@ export default async function Race ({ params }: { params: { raceId: string } }) 
   const { raceId } = params
   const race = await getRace({ raceId })
 
-  return (race.timesCount > 0 && race.times !== undefined) ? <TimesTable times={race.times}/> : null
+  return (race.timesCount > 0 && race.times !== undefined) ? <TimesTable times={race.times}/> : <span>Hola</span>
 }

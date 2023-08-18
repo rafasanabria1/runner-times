@@ -11,7 +11,7 @@ export default function RootLayout ({ children }: { children: React.ReactNode })
   return (
     <html lang="es">
       <body className=''>
-        <aside className="fixed top-0 left-0 z-40 h-screen w-14 desktop:w-96 ">
+        <aside className="fixed top-0 left-0 z-40 h-screen w-14 desktop:w-72">
           <div className="h-full p-2 desktop:p-5 overflow-y-auto flex flex-col justify-between bg-base-200">
             <div>
               <h1 className='hidden desktop:block desktop:leading-8 desktop:text-3xl desktop:font-bold desktop:py-5'>
@@ -27,7 +27,7 @@ export default function RootLayout ({ children }: { children: React.ReactNode })
             </div>
           </div>
         </aside>
-        <section className="p-4 ml-14 desktop:ml-96 h-screen flex flex-col gap-5">
+        <section className="p-4 ml-14 desktop:ml-72 h-screen flex flex-col gap-5">
           {children}
         </section>
       </body>

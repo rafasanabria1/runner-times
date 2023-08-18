@@ -70,21 +70,21 @@ export default function TimesTable ({ times }: { times: Time[] }) {
 
   return (
     <>
-      <section className='filters-container flex justify-between w-full'>
+      <section className='filters-container flex justify-between w-full flex-col desktop:flex-row gap-5 '>
         <div>
           <div className="flex gap-2 items-center">
             <label htmlFor="results" className='text-xl'>Mostrando:</label>
-            <select id="categories" className="select select-bordered text-white select-md w-80 desktop:select-lg" value={pageSize} onChange={e => { setPageSize(parseInt(e.target.value)) }}>
+            <select id="results" className="select select-bordered text-white select-sm w-full desktop:w-72 desktop:select-md" value={pageSize} onChange={e => { setPageSize(parseInt(e.target.value)) }}>
               <option value="25">25 participantes</option>
               <option value="50">50 participantes</option>
               <option value="100">100 participantes</option>
             </select>
           </div>
         </div>
-        <div className="flex gap-5">
+        <div className="flex flex-col desktop:flex-row gap-5">
           <div>
             <label htmlFor="categories" className="sr-only">Selecciona una categoría</label>
-              <select id="categories" className="select select-bordered text-white select-md w-80 desktop:select-lg" value={category} onChange={e => { setCategory(e.target.value) }}>
+              <select id="categories" className="select select-bordered text-white select-sm w-full desktop:w-72 desktop:select-md" value={category} onChange={e => { setCategory(e.target.value) }}>
                 <option value="">Filtrar por categoría</option>
                 {
                   categories.map(({ category, count }) => {
@@ -97,7 +97,7 @@ export default function TimesTable ({ times }: { times: Time[] }) {
           </div>
           <div>
             <label htmlFor="clubs" className="sr-only">Selecciona un club</label>
-              <select id="clubs" className="select select-bordered text-white select-md w-80 desktop:select-lg" value={club} onChange={e => { setClub(e.target.value) }}>
+              <select id="clubs" className="select select-bordered text-white select-sm w-full desktop:w-72 desktop:select-md" value={club} onChange={e => { setClub(e.target.value) }}>
                 <option value="">Filtrar por club</option>
                 {
                   clubs.map(({ club, count }) => {
@@ -112,15 +112,15 @@ export default function TimesTable ({ times }: { times: Time[] }) {
             <label htmlFor="search" className="sr-only">Busca tu nombre</label>
             <div className="relative">
                 <form onSubmit={(e) => { e.preventDefault() }}>
-                  <input type="text" id="search" name="search" className="input input-bordered text-white input-md w-80 desktop:input-lg" placeholder="Busca tu nombre" value={search} onChange={(e) => { setSearch(e.target.value) }} />
+                  <input id="search" type="text" name="search" className="input input-bordered text-white input-sm w-full desktop:w-72 desktop:input-md" placeholder="Busca tu nombre" value={search} onChange={(e) => { setSearch(e.target.value) }} />
                 </form>
                 <div className={`absolute inset-y-0 right-0 flex items-center pr-3 ${search !== '' ? 'hover:cursor-pointer' : 'hidden'}`} onClick={() => { setSearch('') }}>
                   <IconX className='text-white'/>
                 </div>
             </div>
           </div>
-          <div>
-            <button className='btn btn-lg bg-base-100 border-white border hover:bg-base-100 hover:border-white border-opacity-20' onClick={removeFilters}>
+          <div className='hidden desktop:block'>
+            <button className='btn btn-md bg-base-100 border-white border hover:bg-base-100 hover:border-white border-opacity-20' onClick={removeFilters}>
               <IconX className='text-white'/>
             </button>
           </div>

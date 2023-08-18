@@ -38,7 +38,7 @@ export default function RaceGrid ({ races }: { races: Race[] }) {
         }
         {
           (racesFiltered.length > 0) && (
-            <section className='grid desktop:grid-cols-[repeat(auto-fill,minmax(600px,1fr))] gap-5 overflow-y-auto'>
+            <section className='grid desktop:grid-cols-[repeat(auto-fill,minmax(400px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(600px,1fr))] gap-5 overflow-y-auto'>
               {
                 racesFiltered.map((race: Race) => <RaceSummary race={race} key={race.id} />)
               }
