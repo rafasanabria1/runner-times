@@ -1,23 +1,17 @@
-'use client'
 import { type Race } from '@/lib/types'
-import { useSearchParams } from 'next/navigation'
 import SearchRaceForm from '@/components/SearchRaceForm'
 import RaceSummary from './RaceSummary'
-import useSWR from 'swr'
-import Loading from '../loading'
+import { getFullURL } from '@/lib/utils'
 
-const fetchRaces = async (url: string): Promise<Race[]> => {
-  const response = await fetch(url)
+const fetchRaces = async (searchValue = ''): Promise<Race[]> => {
+  const response = await fetch(getFullURL(`/api/races?q=${encodeURI(searchValue)}`))
   if (!response.ok) return await Promise.resolve([])
   return await response.json()
 }
 
-export default function Races () {
-  const search = useSearchParams()
-  const searchValue = search.get('q') ?? ''
-  const { data: races, isLoading } = useSWR(`/api/races?q=${searchValue}`, fetchRaces)
-
-  if (isLoading) return <Loading />
+export default async function Races ({ searchParams }: { searchParams: Record<string, string | undefined> }) {
+  const searchValue = searchParams?.q ?? ''
+  const races = await fetchRaces(searchValue)
 
   return (
     <>

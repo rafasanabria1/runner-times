@@ -9,5 +9,5 @@ export class CustomError extends Error {
 }
 
 export function getFullURL (url: string): string {
-  return `${process.env.BASE_URL ?? ''}${url}`
+  return `${process.env.BASE_URL ?? 'http://localhost:3000'}${url}`
 }
