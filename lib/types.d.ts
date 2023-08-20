@@ -27,3 +27,12 @@ export interface Time {
   diffMettersToFirst: string
   mKm: string
 }
+
+export interface timesQueryParams {
+  raceId: string
+  q?: string
+  category?: string
+  club?: string
+  page?: string
+  perPage?: string
+}

@@ -1,12 +1,15 @@
 'use client'
-import { type Time } from '@/lib/types'
+import { type Race, type Time } from '@/lib/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useDebounce, usePagination } from '@/lib/hooks'
 import { NOCLUB } from '@/lib/const'
 import Paginator from '@/components/Paginator'
 import { IconX } from '@tabler/icons-react'
+import { useRouter } from 'next/navigation'
+import { generateFullURL } from '@/lib/utils'
 
-export default function TimesTable ({ times }: { times: Time[] }) {
+export default function TimesTable ({ race, times }: { race: Race, times: Time[] }) {
+  const router = useRouter()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
   const [club, setClub] = useState('')
@@ -67,6 +70,12 @@ export default function TimesTable ({ times }: { times: Time[] }) {
   useEffect(() => {
     setCurrentPage(1)
   }, [category, club, pageSize])
+
+  useEffect(() => {
+    if (race === null || race.id === undefined) return
+    const url = generateFullURL({ path: `/races/${race.id}`, query: { q: search, category, club, page: currentPage.toString(), perPage: pageSize.toString() } })
+    router.push(url)
+  }, [router, race, search, category, club, currentPage, pageSize])
 
   return (
     <>

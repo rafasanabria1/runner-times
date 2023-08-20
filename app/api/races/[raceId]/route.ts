@@ -6,7 +6,7 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
   const raceId = params.raceId ?? ''
 
   try {
-    if (raceId === '' || typeof raceId !== 'string') {
+    if (raceId === '') {
       throw new CustomError({ message: 'El id de la carrera no es válido.', code: 400 })
     }
 
@@ -15,9 +15,10 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
         id: raceId
       },
       include: {
-        times: {
-          orderBy: {
-            generalClasif: 'asc'
+        times: false,
+        _count: {
+          select: {
+            times: true
           }
         }
       }
@@ -27,26 +28,8 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
       throw new CustomError({ message: 'No se ha encontrado la carrera.', code: 404 })
     }
 
-    const { id, name, link, date, city, distance, times } = race
-    const fullTimes = times.map(time => {
-      const { id, raceId, name, surname, sex, category, club, generalClasif, categoryClasif, sexClasif, totalTime, diffTimeToFirst, diffMettersToFirst, mKm } = time
-      return {
-        id,
-        raceId,
-        name,
-        surname: surname ?? '',
-        sex: sex ?? '',
-        category: category ?? '',
-        club: club ?? '',
-        generalClasif: generalClasif ?? 0,
-        categoryClasif: categoryClasif ?? 0,
-        sexClasif: sexClasif ?? 0,
-        totalTime: totalTime ?? '',
-        diffTimeToFirst: diffTimeToFirst ?? '',
-        diffMettersToFirst: diffMettersToFirst ?? '',
-        mKm: mKm ?? ''
-      }
-    })
+    const { id, name, link, date, city, distance, _count } = race
+
     const fullRace = {
       id,
       name,
@@ -54,8 +37,7 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
       date,
       city: city ?? '',
       distance: distance ?? 0,
-      times: fullTimes,
-      timesCount: fullTimes.length
+      timesCount: _count.times
     }
 
     return NextResponse.json(fullRace)

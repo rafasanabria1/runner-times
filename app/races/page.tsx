@@ -1,10 +1,11 @@
 import { type Race } from '@/lib/types'
 import SearchRaceForm from '@/components/SearchRaceForm'
 import RaceSummary from './RaceSummary'
-import { getFullURL } from '@/lib/utils'
+import { generateFullURL } from '@/lib/utils'
 
 const fetchRaces = async (searchValue = ''): Promise<Race[]> => {
-  const response = await fetch(getFullURL(`/api/races?q=${encodeURI(searchValue)}`))
+  const url = generateFullURL({ path: '/api/races', query: { q: searchValue } })
+  const response = await fetch(url)
   if (!response.ok) return await Promise.resolve([])
   return await response.json()
 }
@@ -19,7 +20,7 @@ export default async function Races ({ searchParams }: { searchParams: Record<st
         <SearchRaceForm searchValue={searchValue} />
       </section>
 
-      <section>
+      <section className='overflow-y-auto'>
         {
           (races != null) && races.length <= 0 && (
             <span className='block text-lg text-center py-10 h-full'>No se han encontrado carreras para esa búsqueda.</span>

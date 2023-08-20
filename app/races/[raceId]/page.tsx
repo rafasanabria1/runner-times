@@ -1,14 +1,18 @@
 import TimesTable from '@/app/races/[raceId]/TimesTable'
-import { type Race as RaceType } from '@/lib/types'
-import { getFullURL } from '@/lib/utils'
+import { fetchRace, fetchTimes } from '@/lib/utils'
 
-const getRace = async ({ raceId }: { raceId: string }): Promise<RaceType> => {
-  return await fetch(getFullURL(`/api/races/${raceId}`)).then(async res => await res.json())
-}
-
-export default async function Race ({ params }: { params: { raceId: string } }) {
+export default async function Race ({ params, searchParams }: { params: { raceId: string }, searchParams: Record<string, string | undefined> }) {
   const { raceId } = params
-  const race = await getRace({ raceId })
+  const q = searchParams?.q ?? ''
+  const category = searchParams?.category ?? ''
+  const club = searchParams?.club ?? ''
+  const page = searchParams?.page ?? '0'
+  const perPage = searchParams?.per_page ?? '25'
 
-  return (race.timesCount > 0 && race.times !== undefined) ? <TimesTable times={race.times}/> : <span>Hola</span>
+  const race = await fetchRace({ raceId })
+  const times = await fetchTimes({ raceId, q, category, club, page, perPage })
+
+  if (race === undefined || race === null) return <span>Carrera no encontrada</span>
+
+  return <TimesTable race={race} times={times} />
 }

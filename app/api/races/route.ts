@@ -47,7 +47,9 @@ export async function GET (req: NextRequest) {
               name: {
                 contains: query.search,
                 mode: 'insensitive'
-              },
+              }
+            },
+            {
               city: {
                 contains: query.search,
                 mode: 'insensitive'
