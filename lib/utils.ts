@@ -13,7 +13,9 @@ export class CustomError extends Error {
 export function generateFullURL ({ path, query }: { path: string, query?: { raceId?: string, link?: string, q?: string, category?: string, club?: string, page?: string, perPage?: string, filters?: boolean } }): string {
   const { raceId, link, q, category, club, page, perPage, filters } = query ?? {}
 
-  const url = new URL(path, process.env.BASE_URL ?? 'http://localhost:3000')
+  const baseURL = process.env.NEXT_PUBLIC_VERCEL_URL !== undefined ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : 'http://localhost:3000'
+
+  const url = new URL(path, baseURL)
   if (raceId !== undefined && raceId !== '') url.searchParams.set('raceId', encodeURI(raceId))
   if (link !== undefined && link !== '') url.searchParams.set('link', encodeURI(link))
   if (q !== undefined && q !== '') url.searchParams.set('q', encodeURI(q))
