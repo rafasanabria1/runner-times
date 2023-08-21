@@ -2,29 +2,29 @@ import { type NextRequest, NextResponse } from 'next/server'
 import prisma from '@/prisma/prismadb'
 import { type Time } from '@/lib/types'
 import { CustomError } from '@/lib/utils'
+import { type Prisma } from '@prisma/client'
 
-export async function GET (req: NextRequest, { params }: { params: { raceId: string } }) {
-  const { raceId } = params
-
+export async function GET (req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const query = {
-    search: searchParams.get('q') ?? '',
-    category: searchParams.get('category') ?? '',
-    club: searchParams.get('club') ?? '',
+    raceId: searchParams.get('raceId') ?? '',
+    search: decodeURIComponent(searchParams.get('q') ?? ''),
+    category: decodeURIComponent(searchParams.get('category') ?? ''),
+    club: decodeURIComponent(searchParams.get('club') ?? ''),
     page: searchParams.get('page') !== null ? parseInt(searchParams.get('page') ?? '') : 1,
     perPage: searchParams.get('per_page') !== null ? parseInt(searchParams.get('per_page') ?? '') : 25
   }
 
   try {
-    if (raceId === '') {
+    if (query.raceId === '') {
       throw new CustomError({ message: 'El id de la carrera no es válido', code: 400 })
     }
 
-    const times = await prisma.time.findMany({
+    const queryOptions: Prisma.TimeFindManyArgs = {
       where: {
         AND: [
           {
-            id: raceId
+            raceId: query.raceId
           },
           {
             OR: [
@@ -41,12 +41,6 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
                 }
               }
             ]
-          },
-          {
-            category: query.category
-          },
-          {
-            club: query.club
           }
         ]
       },
@@ -55,7 +49,44 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
       orderBy: {
         generalClasif: 'asc'
       }
-    })
+    }
+
+    const queryCountOptions: Prisma.TimeCountArgs = {
+      where: {
+        AND: [
+          {
+            raceId: query.raceId
+          },
+          {
+            OR: [
+              {
+                name: {
+                  contains: query.search,
+                  mode: 'insensitive'
+                }
+              },
+              {
+                surname: {
+                  contains: query.search,
+                  mode: 'insensitive'
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+
+    if (query.category !== '' && Array.isArray(queryOptions.where?.AND) && Array.isArray(queryCountOptions.where?.AND)) {
+      queryOptions.where?.AND.push({ category: decodeURI(query.category) })
+      queryCountOptions.where?.AND.push({ category: decodeURI(query.category) })
+    }
+    if (query.club !== '' && Array.isArray(queryOptions.where?.AND) && Array.isArray(queryCountOptions.where?.AND)) {
+      queryOptions.where?.AND.push({ club: decodeURI(query.club) })
+      queryCountOptions.where?.AND.push({ club: decodeURI(query.club) })
+    }
+
+    const times = await prisma.time.findMany(queryOptions)
     if (times === null) {
       throw new CustomError({ message: 'No se ha encontrado la carrera', code: 404 })
     }
@@ -80,7 +111,15 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
       }
     })
 
-    return NextResponse.json(fullTimes)
+    const countAll = await prisma.time.count({
+      where: {
+        raceId: query.raceId
+      }
+    })
+
+    const countFiltered = await prisma.time.count(queryCountOptions)
+
+    return NextResponse.json({ times: fullTimes, countAll, countFiltered })
   } catch (error) {
     if (error instanceof CustomError) {
       return NextResponse.json({ error: error.message }, { status: error.code })
@@ -89,6 +128,7 @@ export async function GET (req: NextRequest, { params }: { params: { raceId: str
     }
   }
 }
+
 export async function POST (req: NextRequest) {
   const { raceId, times }: { raceId: string, times: Time[] } = await req.json()
 

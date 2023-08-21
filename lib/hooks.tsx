@@ -56,7 +56,7 @@ export function usePagination ({ currentPage = 1, pageSize = 25, totalCount = 0,
     const firstIndex = lastIndex - pageSize
     return {
       firstIndexToShow: firstIndex,
-      lastIndexToShow: Math.min(lastIndex, totalCount)
+      lastIndexToShow: Math.max(lastIndex, totalCount)
     }
   }, [currentPage, pageSize, totalCount])
 

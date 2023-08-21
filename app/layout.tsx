@@ -22,6 +22,7 @@ export default function RootLayout ({ children }: { children: React.ReactNode })
                 RT!
               </h2>
               <Menu className="mt-10"/>
+
             </div>
             <div className=' py-5 font-medium'>
               <a href="https://github.com/rafasanabria1/" className='flex items-center p-2 rounded-lg group hover:bg-base-100' target='_blank' rel="noreferrer">

@@ -8,6 +8,9 @@ export interface Race {
   dateFormatted?: string
   times?: Time[]
   timesCount?: int
+  timesCountFiltered?: int
+  categories?: Array<{ name: string, count: number }>
+  clubs?: Array<{ name: string, count: number }>
 }
 
 export interface Time {

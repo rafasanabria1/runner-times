@@ -1,75 +1,56 @@
 'use client'
 import { type Race, type Time } from '@/lib/types'
-import { useEffect, useMemo, useState } from 'react'
-import { useDebounce, usePagination } from '@/lib/hooks'
+import { useEffect, useState } from 'react'
+import { usePagination } from '@/lib/hooks'
 import { NOCLUB } from '@/lib/const'
 import Paginator from '@/components/Paginator'
 import { IconX } from '@tabler/icons-react'
 import { useRouter } from 'next/navigation'
 import { generateFullURL } from '@/lib/utils'
 
-export default function TimesTable ({ race, times }: { race: Race, times: Time[] }) {
+export default function TimesTable ({
+  race,
+  times,
+  timesCountAll = 0,
+  timesCountFiltered = 0,
+  searchValue = '',
+  categoryValue = '',
+  clubValue = '',
+  pageValue = 1,
+  perPageValue = 25
+}: {
+  race: Race
+  times: Time[]
+  timesCountAll: number
+  timesCountFiltered: number
+  searchValue: string
+  categoryValue: string
+  clubValue: string
+  pageValue: number
+  perPageValue: number
+}) {
   const router = useRouter()
-  const [search, setSearch] = useState('')
-  const [category, setCategory] = useState('')
-  const [club, setClub] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(50)
-  const debouncedSearch = useDebounce(search, 300).toUpperCase()
+  const [search, setSearch] = useState(searchValue)
+  const [category, setCategory] = useState(categoryValue)
+  const [club, setClub] = useState(clubValue)
+  const [currentPage, setCurrentPage] = useState(pageValue)
+  const [pageSize, setPageSize] = useState(perPageValue)
 
-  const { categories, clubs } = useMemo(() => {
-    const categoriesMap = new Map<Time['category'], number>()
-    const clubsMap = new Map<Time['club'], number>()
-    let countNoClub = 0
-    times.forEach(time => {
-      const categoryCount = categoriesMap.get(time.category) ?? 0
-      categoriesMap.set(time.category, categoryCount + 1)
+  const { categories, clubs } = race
 
-      if (time.club === '') return countNoClub++
-
-      const clubCount = clubsMap.get(time.club) ?? 0
-      clubsMap.set(time.club, clubCount + 1)
-    })
-
-    const categories = Array.from(categoriesMap.entries()).map(([category, count]) => ({ category, count })).sort((a, b) => (a.category > b.category) ? 1 : -1)
-    const clubs = Array.from(clubsMap.entries()).map(([club, count]) => ({ club, count })).sort((a, b) => (a.club > b.club) ? 1 : -1)
-    clubs.unshift({ club: NOCLUB, count: countNoClub })
-
-    return {
-      categories,
-      clubs
-    }
-  }, [times])
-
-  const timesFiltered = useMemo(() => {
-    if (debouncedSearch === '' && category === '' && club === '') return times
-    return times.filter(time => {
-      let show = true
-      if (debouncedSearch !== '') show = show && (time.name.includes(debouncedSearch) || time.surname.includes(debouncedSearch))
-      if (category !== '') show = show && (time.category === category)
-      if (club !== '') {
-        if (club === NOCLUB) show = show && (time.club === '')
-        else show = show && (time.club === club)
-      }
-      return show
-    })
-  }, [times, debouncedSearch, category, club])
-
-  const { paginationRange, firstIndexToShow, lastIndexToShow } = usePagination({ currentPage, pageSize, totalCount: timesFiltered.length })
-
-  const timesToShow = timesFiltered.slice(firstIndexToShow, lastIndexToShow)
+  const { paginationRange, firstIndexToShow, lastIndexToShow } = usePagination({ currentPage, pageSize, totalCount: race.timesCountFiltered })
 
   const removeFilters = () => {
-    if (category !== '' || club !== '' || search !== '') {
-      setCategory('')
-      setClub('')
-      setSearch('')
-    }
+    setCategory('')
+    setClub('')
+    setSearch('')
   }
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [category, club, pageSize])
+    if (category !== '' || club !== '' || search !== '') {
+      setCurrentPage(1)
+    }
+  }, [category, club, search])
 
   useEffect(() => {
     if (race === null || race.id === undefined) return
@@ -96,9 +77,9 @@ export default function TimesTable ({ race, times }: { race: Race, times: Time[]
               <select id="categories" className="select select-bordered text-white select-sm w-full desktop:w-72 desktop:select-md" value={category} onChange={e => { setCategory(e.target.value) }}>
                 <option value="">Filtrar por categoría</option>
                 {
-                  categories.map(({ category, count }) => {
+                  categories?.map(({ name, count }) => {
                     return (
-                      <option value={category} key={category}>{category} ({count})</option>
+                      <option value={name} key={name}>{name} ({count})</option>
                     )
                   })
                   }
@@ -109,9 +90,10 @@ export default function TimesTable ({ race, times }: { race: Race, times: Time[]
               <select id="clubs" className="select select-bordered text-white select-sm w-full desktop:w-72 desktop:select-md" value={club} onChange={e => { setClub(e.target.value) }}>
                 <option value="">Filtrar por club</option>
                 {
-                  clubs.map(({ club, count }) => {
+                  clubs?.map(({ name, count }) => {
+                    const clubName = name === '' ? NOCLUB : name
                     return (
-                      <option value={club} key={club}>{club} ({count})</option>
+                      <option value={name} key={clubName}>{clubName} ({count})</option>
                     )
                   })
                   }
@@ -151,14 +133,14 @@ export default function TimesTable ({ race, times }: { race: Race, times: Time[]
           </thead>
           <tbody>
             {
-              timesToShow.length <= 0 && (
+              timesCountFiltered <= 0 && (
                 <tr>
                   <td colSpan={10} className="text-center py-4">Sin resultados</td>
                 </tr>
               )
             }
             {
-              timesToShow.map(time => {
+              times.map(time => {
                 return (
                     <tr className="py-2 hover [&>td]:py-2 [&>td]:text-center" key={time.id}>
                       <td>{time.generalClasif}</td>
@@ -179,8 +161,8 @@ export default function TimesTable ({ race, times }: { race: Race, times: Time[]
       <Paginator
           currentPage={currentPage}
           pageSize={pageSize}
-          resultsFilteredCount={timesFiltered.length}
-          resultsCount={times.length}
+          resultsFilteredCount={timesCountFiltered}
+          resultsCount={timesCountAll}
           paginationRange={paginationRange}
           firstIndexToShow={firstIndexToShow}
           lastIndexToShow={lastIndexToShow}
