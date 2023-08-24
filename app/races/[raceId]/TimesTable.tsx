@@ -54,7 +54,7 @@ export default function TimesTable ({
   }, [category, club, search, currentPage])
 
   useEffect(() => {
-    const url = new URL(`/races/${race.id}`)
+    const url = new URL(`/races/${race.id}`, window.location.href)
     if (search !== undefined && search !== '') url.searchParams.set('q', encodeURI(search))
     if (category !== undefined && category !== '') url.searchParams.set('category', encodeURI(category))
     if (club !== undefined && club !== '') url.searchParams.set('club', encodeURI(club))
