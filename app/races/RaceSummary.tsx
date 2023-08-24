@@ -1,4 +1,4 @@
-import { type Race } from '@/lib/types'
+import { type Race } from '@/app/lib/types'
 import Image from 'next/image'
 import cartelImg from '@/app/images/cartel.jpg'
 import Link from 'next/link'
@@ -31,8 +31,8 @@ export default function RaceSummary ({ race }: { race: Race }) {
             <span>{ race.city } - { dateFormatted }</span>
             <span>{ race.distance } metros</span>
             {
-              race.timesCount > 0
-                ? <span>{ race.timesCount } tiempos registrados</span>
+              race._count?.times > 0
+                ? <span>{ race._count?.times } tiempos registrados</span>
                 : <span>&middot; Tiempos no disponibles</span>
             }
           </div>

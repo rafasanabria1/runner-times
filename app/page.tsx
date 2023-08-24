@@ -1,4 +1,4 @@
-import SearchRaceForm from '@/components/SearchRaceForm'
+import SearchRaceForm from '@/app/components/SearchRaceForm'
 import Link from 'next/link'
 
 export default function Home () {

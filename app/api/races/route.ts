@@ -1,90 +1,19 @@
-import prisma from '@/prisma/prismadb'
 import { type NextRequest, NextResponse } from 'next/server'
-import { CustomError } from '@/lib/utils'
+import { CustomError } from '@/app/lib/utils'
+import { createRace, getAll, getRaceFromLink, getRacesFromFilters, updateRaceDistance } from '@/app/models/RaceModel'
 
 export async function GET (req: NextRequest) {
   const { searchParams } = new URL(req.url)
-  const query = {
-    link: searchParams.get('link') ?? '',
-    search: searchParams.get('q') ?? ''
-  }
+  const link = searchParams.get('link') ?? ''
+  const search = searchParams.get('q') ?? ''
 
   try {
-    if (query.link !== '') {
-      const race = await prisma.race.findUnique({
-        where: {
-          link: query.link
-        },
-        include: {
-          times: false,
-          _count: {
-            select: {
-              times: true
-            }
-          }
-        }
-      })
-      if (race === null) {
-        throw new CustomError({ message: 'No se ha encontrado la carrera', code: 404 })
-      }
+    let rawRaces = []
+    if (link !== '') rawRaces = await getRaceFromLink(link)
+    else if (search !== '') rawRaces = await getRacesFromFilters({ search })
+    else rawRaces = await getAll({})
 
-      const { id, name, link, date, city, distance, _count } = race
-
-      return NextResponse.json({
-        id,
-        name,
-        link,
-        date,
-        city: city ?? '',
-        distance: distance ?? 0,
-        timesCount: _count.times
-      })
-    } else {
-      const races = await prisma.race.findMany({
-        where: {
-          OR: [
-            {
-              name: {
-                contains: query.search,
-                mode: 'insensitive'
-              }
-            },
-            {
-              city: {
-                contains: query.search,
-                mode: 'insensitive'
-              }
-            }
-          ]
-        },
-        include: {
-          times: false,
-          _count: {
-            select: {
-              times: true
-            }
-          }
-        },
-        orderBy: {
-          date: 'desc'
-        }
-      })
-
-      const fullRaces = races.map(race => {
-        const { id, name, link, date, city, distance, _count } = race
-        return {
-          id,
-          name,
-          link,
-          date,
-          city: city ?? '',
-          distance: distance ?? 0,
-          timesCount: _count.times
-        }
-      })
-
-      return NextResponse.json(fullRaces)
-    }
+    return NextResponse.json(rawRaces)
   } catch (error) {
     if (error instanceof CustomError) {
       return NextResponse.json({ error: error.message }, { status: error.code })
@@ -93,7 +22,6 @@ export async function GET (req: NextRequest) {
     }
   }
 }
-
 export async function POST (req: NextRequest) {
   const { name, date, link, city } = await req.json()
 
@@ -105,14 +33,7 @@ export async function POST (req: NextRequest) {
       throw new CustomError({ message: 'El link de la carrera es obligatorio.', code: 400 })
     }
 
-    const race = await prisma.race.create({
-      data: {
-        name,
-        link,
-        date,
-        city
-      }
-    })
+    const race = await createRace({ name, date, link, city })
 
     return NextResponse.json(race)
   } catch (error) {
@@ -128,25 +49,15 @@ export async function PUT (req: NextRequest) {
   const { raceId, distance } = await req.json()
 
   try {
-    if (raceId === '' || typeof raceId !== 'string') {
-      throw new CustomError({ message: 'El id de la carrera no es válido.', code: 400 })
+    if (raceId === '') {
+      throw new CustomError({ message: 'Debe indicar un id de carrera.', code: 400 })
     }
 
     if (distance === '') {
       throw new CustomError({ message: 'La distancia de la carrera no es válida.', code: 400 })
     }
 
-    const race = await prisma.race.update({
-      where: {
-        id: raceId
-      },
-      data: {
-        distance
-      },
-      include: {
-        times: false
-      }
-    })
+    const race = updateRaceDistance({ id: raceId, distance })
 
     return NextResponse.json(race)
   } catch (error) {

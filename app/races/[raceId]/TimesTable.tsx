@@ -1,15 +1,16 @@
 'use client'
-import { type Race, type Time } from '@/lib/types'
+import { type Race, type Time } from '@/app/lib/types'
 import { useEffect, useState } from 'react'
-import { usePagination } from '@/lib/hooks'
-import { NOCLUB } from '@/lib/const'
-import Paginator from '@/components/Paginator'
+import { usePagination } from '@/app/lib/hooks'
+import { NOCLUB } from '@/app/lib/const'
+import Paginator from '@/app/components/Paginator'
 import { IconX } from '@tabler/icons-react'
 import { useRouter } from 'next/navigation'
-import { generateFullURL } from '@/lib/utils'
 
 export default function TimesTable ({
   race,
+  categories,
+  clubs,
   times,
   timesCountAll = 0,
   timesCountFiltered = 0,
@@ -20,6 +21,8 @@ export default function TimesTable ({
   perPageValue = 25
 }: {
   race: Race
+  categories: Array<{ name: string, count: number }>
+  clubs: Array<{ name: string, count: number }>
   times: Time[]
   timesCountAll: number
   timesCountFiltered: number
@@ -36,9 +39,7 @@ export default function TimesTable ({
   const [currentPage, setCurrentPage] = useState(pageValue)
   const [pageSize, setPageSize] = useState(perPageValue)
 
-  const { categories, clubs } = race
-
-  const { paginationRange, firstIndexToShow, lastIndexToShow } = usePagination({ currentPage, pageSize, totalCount: race.timesCountFiltered })
+  const { paginationRange, firstIndexToShow, lastIndexToShow } = usePagination({ currentPage, pageSize, totalCount: timesCountFiltered })
 
   const removeFilters = () => {
     setCategory('')
@@ -47,15 +48,21 @@ export default function TimesTable ({
   }
 
   useEffect(() => {
-    if (category !== '' || club !== '' || search !== '') {
+    if ((category !== '' || club !== '' || search !== '') && currentPage !== 1) {
       setCurrentPage(1)
     }
-  }, [category, club, search])
+  }, [category, club, search, currentPage])
 
   useEffect(() => {
-    if (race === null || race.id === undefined) return
-    const url = generateFullURL({ path: `/races/${race.id}`, query: { q: search, category, club, page: currentPage.toString(), perPage: pageSize.toString() } })
-    router.push(url)
+    const url = new URL(`/races/${race.id}`)
+    if (search !== undefined && search !== '') url.searchParams.set('q', encodeURI(search))
+    if (category !== undefined && category !== '') url.searchParams.set('category', encodeURI(category))
+    if (club !== undefined && club !== '') url.searchParams.set('club', encodeURI(club))
+    url.searchParams.set('page', currentPage.toString())
+    url.searchParams.set('per_page', pageSize.toString())
+    url.searchParams.set('filters', 'true')
+
+    router.push(url.toString())
   }, [router, race, search, category, club, currentPage, pageSize])
 
   return (
@@ -144,7 +151,7 @@ export default function TimesTable ({
                 return (
                     <tr className="py-2 hover [&>td]:py-2 [&>td]:text-center" key={time.id}>
                       <td>{time.generalClasif}</td>
-                      <td>{time.name + ' ' + time.surname}</td>
+                      <td>{time.name} ${time.surname?.toString()}</td>
                       <td>{time.category}</td>
                       <td>{time.sex}</td>
                       <td>{time.totalTime}</td>

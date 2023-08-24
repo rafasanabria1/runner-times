@@ -1,5 +1,3 @@
-import { type Race, type Time, type timesQueryParams } from '@/lib/types'
-
 export class CustomError extends Error {
   code = 0
 
@@ -26,30 +24,4 @@ export function generateFullURL ({ path, query }: { path: string, query?: { race
   if (filters !== undefined) url.searchParams.set('filters', filters.toString())
 
   return url.toString()
-}
-
-export async function fetchRaces (searchValue = ''): Promise<Race[]> {
-  const url = generateFullURL({ path: '/api/races', query: { q: searchValue } })
-  const response = await fetch(url)
-  if (!response.ok) return await Promise.resolve([])
-  return await response.json()
-}
-
-export async function fetchRace ({ raceId, link, filters = false }: { raceId?: string, link?: string, filters: boolean }): Promise<Race | null> {
-  if (raceId === undefined && link === undefined) return await Promise.resolve(null)
-
-  let url
-  if (raceId !== undefined) url = generateFullURL({ path: `/api/races/${raceId}`, query: { filters } })
-  else url = generateFullURL({ path: '/api/races', query: { link, filters } })
-
-  const response = await fetch(url)
-  if (!response.ok) return await Promise.resolve(null)
-  return await response.json()
-}
-
-export async function fetchTimes ({ raceId, q, category, club, page, perPage }: timesQueryParams): Promise<{ times: Time[], countAll: number, countFiltered: number }> {
-  const url = generateFullURL({ path: '/api/times', query: { raceId, q, category, club, page, perPage } })
-  const response = await fetch(url)
-  if (!response.ok) return await Promise.resolve({ times: [], countAll: 0, countFiltered: 0 })
-  return await response.json()
 }
