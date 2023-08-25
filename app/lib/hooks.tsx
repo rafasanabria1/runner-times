@@ -62,3 +62,46 @@ export function usePagination ({ currentPage = 1, pageSize = 25, totalCount = 0,
 
   return { paginationRange, firstIndexToShow, lastIndexToShow }
 }
+
+export function useBreakpoint () {
+  const [breakpoint, setBreakpoint] = useState<'' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'>('')
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0
+  })
+
+  const handleResize = () => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    handleResize()
+
+    if (windowSize.width > 0 && windowSize.width < 640) {
+      setBreakpoint('xs')
+    }
+    if (windowSize.width > 640 && windowSize.width < 768) {
+      setBreakpoint('sm')
+    }
+    if (windowSize.width > 768 && windowSize.width < 1024) {
+      setBreakpoint('md')
+    }
+    if (windowSize.width > 1024 && windowSize.width < 1280) {
+      setBreakpoint('lg')
+    }
+    if (windowSize.width > 1280 && windowSize.width < 1536) {
+      setBreakpoint('xl')
+    }
+    if (windowSize.width >= 1536) {
+      setBreakpoint('2xl')
+    }
+
+    return () => { window.removeEventListener('resize', handleResize) }
+  }, [windowSize.width])
+
+  return breakpoint
+}

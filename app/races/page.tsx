@@ -10,7 +10,7 @@ export default async function Races ({ searchParams }: { searchParams: Record<st
   return (
     <>
       <section>
-        <SearchRaceForm searchValue={search} />
+        <SearchRaceForm />
       </section>
 
       <section className='overflow-y-auto'>

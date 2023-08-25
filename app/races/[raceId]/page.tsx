@@ -1,4 +1,4 @@
-import TimesTable from '@/app/races/[raceId]/TimesTable'
+import TimesResults from '@/app/races/[raceId]/TimesResults'
 import { getRaceCategoriesWithCount, getRaceClubsWithCount, getRaceFromId } from '@/app/models/RaceModel'
 import { getAllFromFilters } from '@/app/models/TimeModel'
 
@@ -17,7 +17,7 @@ export default async function Race ({ params, searchParams }: { params: { raceId
 
   if (race === undefined || race === null) return <span>Carrera no encontrada</span>
 
-  return <TimesTable
+  return <TimesResults
     race={race}
     categories={categories}
     clubs={clubs}

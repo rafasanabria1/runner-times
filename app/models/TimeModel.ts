@@ -1,6 +1,7 @@
 import prisma from '@/prisma/prismadb'
 import { type Prisma } from '@prisma/client'
 import { type TimeInput } from '../lib/types'
+import { NOCLUB } from '../lib/const'
 
 const selectObject = {
   id: true,
@@ -96,16 +97,20 @@ export async function getAllFromFilters ({
     }
   }
 
+  console.log({ search })
+
   if (category !== '' && Array.isArray(queryOptions.where?.AND) && Array.isArray(queryCountOptions.where?.AND)) {
     queryOptions.where?.AND.push({ category })
     queryCountOptions.where?.AND.push({ category })
   }
-
   if (club !== '' && Array.isArray(queryOptions.where?.AND) && Array.isArray(queryCountOptions.where?.AND)) {
-    queryOptions.where?.AND.push({ club })
-    queryCountOptions.where?.AND.push({ club })
+    queryOptions.where?.AND.push({
+      club: club === NOCLUB ? { isSet: false } : club
+    })
+    queryCountOptions.where?.AND.push({
+      club: club === NOCLUB ? { isSet: false } : club
+    })
   }
-
   return await Promise.all([prisma.time.findMany(queryOptions), prisma.time.count({ where: { raceId } }), prisma.time.count(queryCountOptions)])
 }
 

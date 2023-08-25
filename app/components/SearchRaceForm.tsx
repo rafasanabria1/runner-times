@@ -1,11 +1,12 @@
 'use client'
 import { IconSearch, IconX } from '@tabler/icons-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-export default function SearchRaceForm ({ searchValue = '' }) {
+export default function SearchRaceForm () {
+  const searchParams = useSearchParams()
   const router = useRouter()
-  const [search, setSearch] = useState(searchValue)
+  const [search, setSearch] = useState(searchParams?.get('q') ?? '')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
