@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { CustomError } from '@/app/lib/utils'
-import { createRace, getAll, getRaceFromLink, getRacesFromFilters, updateRaceDistance } from '@/app/models/RaceModel'
+import { createRace, getAll, getRaceFromLink, getRacesFromFilters, updateRaceDistance, updateRaceImageURL } from '@/app/models/RaceModel'
 
 export async function GET (req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -23,7 +23,7 @@ export async function GET (req: NextRequest) {
   }
 }
 export async function POST (req: NextRequest) {
-  const { name, date, link, city } = await req.json()
+  const { name, date, link, city, provider } = await req.json()
 
   try {
     if (name === '') {
@@ -33,7 +33,7 @@ export async function POST (req: NextRequest) {
       throw new CustomError({ message: 'El link de la carrera es obligatorio.', code: 400 })
     }
 
-    const race = await createRace({ name, date, link, city })
+    const race = await createRace({ name, date, link, city, provider })
 
     return NextResponse.json(race)
   } catch (error) {
@@ -46,18 +46,20 @@ export async function POST (req: NextRequest) {
 }
 
 export async function PUT (req: NextRequest) {
-  const { raceId, distance } = await req.json()
+  const { raceId, distance, imageURL } = await req.json()
 
   try {
     if (raceId === '') {
       throw new CustomError({ message: 'Debe indicar un id de carrera.', code: 400 })
     }
 
-    if (distance === '') {
-      throw new CustomError({ message: 'La distancia de la carrera no es válida.', code: 400 })
+    if (distance === '' && imageURL === '') {
+      throw new CustomError({ message: 'Debe indicar un campo para hacer la actualización.', code: 400 })
     }
 
-    const race = updateRaceDistance({ id: raceId, distance })
+    let race
+    if (distance > 0) race = updateRaceDistance({ id: raceId, distance })
+    if (imageURL !== '') race = updateRaceImageURL({ id: raceId, imageURL })
 
     return NextResponse.json(race)
   } catch (error) {

@@ -1,6 +1,5 @@
 import { type Race } from '@/app/lib/types'
 import Image from 'next/image'
-import cartelImg from '@/app/images/cartel.jpg'
 import Link from 'next/link'
 
 export default function RaceSummary ({ race }: { race: Race }) {
@@ -9,9 +8,12 @@ export default function RaceSummary ({ race }: { race: Race }) {
   return (
     <article className='p-3 desktop:p-5 rounded-lg bg-base-200 grid items-center'>
       <div className="flex gap-2 desktop:gap-5 flex-col desktop:flex-row justify-center desktop:items-center">
-        <div className="h-40 w-32 rounded-lg border-2 border-dark mx-auto" >
+        <div className="h-44 sm:h-40 w-36 rounded-lg border border-white mx-auto border-opacity-20" >
           <Link href={`/races/${race.id}?page=1&per_page=25`} >
-            <Image src={cartelImg} alt={race.name} className='object-fill w-full h-full' />
+            {
+              (race.imageURL?.toString() !== undefined) &&
+                <Image src={race.imageURL?.toString()} alt={race.name} className='object-fill w-full h-full' width={144} height={160} />
+            }
           </Link>
         </div>
         <div className='grow w-full'>

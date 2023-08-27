@@ -9,6 +9,7 @@ const selectObject = {
   date: true,
   city: true,
   distance: true,
+  imageURL: true,
   times: false,
   _count: {
     select: {
@@ -17,7 +18,7 @@ const selectObject = {
   }
 }
 
-export async function getAll ({ search = '', orderBy = 'date', order = 'asc' }: { search?: string, orderBy?: string, order?: 'asc' | 'desc' }) {
+export async function getAll ({ search = '', orderBy = 'date', order = 'desc' }: { search?: string, orderBy?: string, order?: 'asc' | 'desc' }) {
   return await prisma.race.findMany({
     select: selectObject,
     where: {
@@ -107,13 +108,14 @@ export async function getRacesFromFilters ({
   return await prisma.race.findMany(queryOptions)
 }
 
-export async function createRace ({ name, date, link, city }: { name: string, date: Date, link: string, city: string }) {
+export async function createRace ({ name, date, link, city, provider }: { name: string, date: Date, link: string, city: string, provider: string }) {
   return await prisma.race.create({
     data: {
       name,
       link,
       date,
-      city
+      city,
+      provider
     }
   })
 }
@@ -126,6 +128,18 @@ export async function updateRaceDistance ({ id, distance }: { id: string, distan
     },
     data: {
       distance
+    }
+  })
+}
+
+export async function updateRaceImageURL ({ id, imageURL }: { id: string, imageURL: string }) {
+  return await prisma.race.update({
+    select: selectObject,
+    where: {
+      id
+    },
+    data: {
+      imageURL
     }
   })
 }

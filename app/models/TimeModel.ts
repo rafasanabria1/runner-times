@@ -97,8 +97,6 @@ export async function getAllFromFilters ({
     }
   }
 
-  console.log({ search })
-
   if (category !== '' && Array.isArray(queryOptions.where?.AND) && Array.isArray(queryCountOptions.where?.AND)) {
     queryOptions.where?.AND.push({ category })
     queryCountOptions.where?.AND.push({ category })

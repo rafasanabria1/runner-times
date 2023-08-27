@@ -14,9 +14,10 @@ model Race {
   date DateTime?
   city String?
   distance Int?
+  provider String?
+  imageURL String?
   createAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   times Time[]
 }
 

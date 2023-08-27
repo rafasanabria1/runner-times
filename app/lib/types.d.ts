@@ -1,9 +1,11 @@
 export interface RaceInput {
   name: string
   link: string
+  provider?: string | null
   date?: DateTime | null
   city?: string | null
   distance?: number | null
+  imageURL?: string | null
 }
 
 export interface Race extends RaceInput {
