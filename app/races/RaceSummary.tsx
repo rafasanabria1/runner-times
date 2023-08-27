@@ -1,4 +1,5 @@
 import { type Race } from '@/app/lib/types'
+import { IconPhotoOff } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -14,6 +15,13 @@ export default function RaceSummary ({ race }: { race: Race }) {
               (race.imageURL?.toString() !== undefined) &&
                 <Image src={race.imageURL?.toString()} alt={race.name} className='object-fill w-full h-full' width={144} height={160} />
             }
+            {
+              (race.imageURL === '' || race.imageURL === null) && (
+                <span className='grid place-items-center w-full h-full'>
+                  <IconPhotoOff className='w-8 h-8 lg:w-16 lg:h-16'/>
+                </span>
+              )
+            }
           </Link>
         </div>
         <div className='grow w-full'>
@@ -26,7 +34,7 @@ export default function RaceSummary ({ race }: { race: Race }) {
             {
               race._count?.times > 0
                 ? <span>{ race._count?.times } tiempos registrados</span>
-                : <span>&middot; Tiempos no disponibles</span>
+                : <span>Tiempos no disponibles</span>
             }
           </div>
         </div>
