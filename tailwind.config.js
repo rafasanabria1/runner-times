@@ -6,11 +6,6 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
-    extend: {
-      screens: {
-        desktop: '768px'
-      }
-    }
   },
   plugins: [
     require("daisyui")

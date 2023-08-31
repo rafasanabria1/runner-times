@@ -31,7 +31,7 @@ export default function Menu ({ className }: { className: string }) {
             <li key={link.href}>
                 <Link href={link.href} className={`flex items-center p-2 rounded-lg group hover:bg-base-100 ${link.isActive !== '' ? 'bg-base-100' : ''}`}>
                   <span>{link.icon}</span>
-                  <span className="hidden desktop:ml-3 desktop:block">{link.name}</span>
+                  <span className="hidden lg:ml-3 lg:block">{link.name}</span>
                 </Link>
             </li>
           )

@@ -2,7 +2,7 @@
 import { type Race, type Time } from '@/app/lib/types'
 import { useCallback, useEffect, useState } from 'react'
 import { useBreakpoint, usePagination } from '@/app/lib/hooks'
-import { NOCLUB } from '@/app/lib/const'
+import { NOCLUB, breakpoints } from '@/app/lib/const'
 import Paginator from '@/app/components/Paginator'
 import { IconX } from '@tabler/icons-react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -135,10 +135,10 @@ export default function TimesResults ({
       </section>
       <section className='times-container grow w-full overflow-y-auto'>
         {
-            breakpoint !== '' && breakpoint === 'xs' && (<TimesList times={times} />)
+            breakpoint <= breakpoints.md && (<TimesList times={times} />)
         }
         {
-            breakpoint !== '' && breakpoint !== 'xs' && (<TimesTable times={times} />)
+            breakpoint > breakpoints.md && (<TimesTable times={times} />)
         }
       </section>
       <Paginator

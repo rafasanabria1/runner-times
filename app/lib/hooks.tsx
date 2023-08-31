@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
-import { DOTS } from './const'
+import { DOTS, breakpoints } from './const'
 
 export function useDebounce (value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -64,44 +64,30 @@ export function usePagination ({ currentPage = 1, pageSize = 25, totalCount = 0,
 }
 
 export function useBreakpoint () {
-  const [breakpoint, setBreakpoint] = useState<'' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'>('')
-  const [windowSize, setWindowSize] = useState({
-    width: 0,
-    height: 0
-  })
-
-  const handleResize = () => {
-    setWindowSize({
-      width: window.innerWidth,
-      height: window.innerHeight
-    })
-  }
+  const [breakpoint, setBreakpoint] = useState<typeof breakpoints.xs>(0)
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize)
-    handleResize()
+    const width = window.innerWidth
 
-    if (windowSize.width > 0 && windowSize.width < 640) {
-      setBreakpoint('xs')
+    if (width > 0 && width < 640) {
+      setBreakpoint(breakpoints.xs)
     }
-    if (windowSize.width > 640 && windowSize.width < 768) {
-      setBreakpoint('sm')
+    if (width > 640 && width < 768) {
+      setBreakpoint(breakpoints.sm)
     }
-    if (windowSize.width > 768 && windowSize.width < 1024) {
-      setBreakpoint('md')
+    if (width > 768 && width < 1024) {
+      setBreakpoint(breakpoints.md)
     }
-    if (windowSize.width > 1024 && windowSize.width < 1280) {
-      setBreakpoint('lg')
+    if (width > 1024 && width < 1280) {
+      setBreakpoint(breakpoints.lg)
     }
-    if (windowSize.width > 1280 && windowSize.width < 1536) {
-      setBreakpoint('xl')
+    if (width > 1280 && width < 1536) {
+      setBreakpoint(breakpoints.xl)
     }
-    if (windowSize.width >= 1536) {
-      setBreakpoint('2xl')
+    if (width >= 1536) {
+      setBreakpoint(breakpoints.xxl)
     }
-
-    return () => { window.removeEventListener('resize', handleResize) }
-  }, [windowSize.width])
+  }, [])
 
   return breakpoint
 }

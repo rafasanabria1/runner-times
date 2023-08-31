@@ -1,5 +1,5 @@
 import SearchRaceForm from '@/app/components/SearchRaceForm'
-import RaceSummary from './RaceSummary'
+import RaceSummary from '../components/RaceSummary'
 import { getAll } from '@/app/models/RaceModel'
 import { type Race } from '@/app/lib/types'
 
@@ -21,7 +21,7 @@ export default async function Races ({ searchParams }: { searchParams: Record<st
         }
         {
           (races != null) && races.length > 0 && (
-            <article className='grid desktop:grid-cols-[repeat(auto-fill,minmax(400px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(600px,1fr))] gap-5 overflow-y-auto'>
+            <article className='grid md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-5 overflow-y-auto'>
               {
                 races.map((race: Race) => <RaceSummary race={race} key={race.id} />)
               }
