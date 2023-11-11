@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Este repositorio contiene una aplicación comprobar la información y resultados de carreras populares. Actualmente, la información y los resultados publicados son los mismos que están disponibles en [https://www.ideain.com/](https://www.ideain.com/) y han sido obtenidos mediante el proyecto complementario [https://github.com/rafasanabria1/scrapping-runner-times](Scrap Runner Times). Ambos proyectos se han realizado solamente con el objetivo de aprendizaje sobre los lenguajes y las platarformas utilizadas.
+Este repositorio contiene una aplicación comprobar la información y resultados de carreras populares. Actualmente, la información y los resultados publicados son los mismos que están disponibles en [https://www.ideain.com/](https://www.ideain.com/) y han sido obtenidos mediante el proyecto complementario [Scrap Runner Times](https://github.com/rafasanabria1/scrapping-runner-times). Ambos proyectos se han realizado solamente con el objetivo de aprendizaje sobre los lenguajes y las platarformas utilizadas.
 
 ## Sitio público
 
