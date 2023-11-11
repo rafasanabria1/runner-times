@@ -10,9 +10,9 @@ export default async function Home () {
       </section>
       <section className='grid place-items-center h-full overflow-y-auto'>
         <div className="flex flex-col w-full desktop:w-1/2 mx-auto">
-          <SearchRaceFocus />
+          <Link href="/races" className="grid h-24 lg:h-32 card bg-base-200 rounded-box place-items-center uppercase font-bold hover:cursor-pointer">Consulta todas las carreras</Link>
           <div className="divider">O</div>
-          <Link href="/races" className="grid h-24 lg:h-32 card bg-base-200 rounded-box place-items-center uppercase font-bold hover:cursor-pointer">Consulta todas</Link>
+          <SearchRaceFocus />
         </div>
       </section>
     </>
